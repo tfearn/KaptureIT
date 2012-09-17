@@ -15,6 +15,5 @@
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UINavigationController *navigationController;
 @property (strong, nonatomic) CLLocationManager *locationManager;
-@property BOOL inBackground;
 
 @end

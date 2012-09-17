@@ -23,7 +23,6 @@
 @synthesize window = _window;
 @synthesize navigationController = _navigationController;
 @synthesize locationManager = _locationManager;
-@synthesize inBackground = _inBackground;
 
 - (void)dealloc
 {
@@ -59,9 +58,8 @@
     // Setup the location manager
     _locationManager = [[CLLocationManager alloc] init];
     [self.locationManager setDelegate:self];
-    [self.locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
-    [self.locationManager setDistanceFilter:5.0f];
-    [self.locationManager startUpdatingLocation];
+    [self.locationManager setDesiredAccuracy:kCLLocationAccuracyNearestTenMeters];
+    [self.locationManager setDistanceFilter:kCLDistanceFilterNone];
     
     // Observers
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginComplete) name:kNotificationLoginComplete object:nil];
@@ -85,13 +83,13 @@
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    self.inBackground = YES;
+    [self.locationManager startUpdatingLocation];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    self.inBackground = NO;
+    [self.locationManager stopUpdatingLocation];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -130,9 +128,9 @@
 // LocationManager Delegates
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
     
-    // Are we running in the background and part of a contest?
+    // Are we part of a contest?
     NSString *objectId = [Globals getContestPlayerObjectId];
-    if(self.inBackground && objectId != nil) {
+    if(objectId != nil) {
         
         // Save our position
         PFGeoPoint *point = [[[PFGeoPoint alloc] init] autorelease];
@@ -141,7 +139,7 @@
         PFObject *playerObject = [PFObject objectWithClassName:@"Player"];
         [playerObject setObjectId:objectId];
         [playerObject setObject:point forKey:@"location"];
-        [playerObject saveEventually];
+        [playerObject saveInBackground];
     }
 }
 

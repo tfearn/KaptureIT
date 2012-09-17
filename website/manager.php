@@ -33,6 +33,59 @@
 	// Loop forever
 	while(1) {
 	
+		// Get all players
+		//
+	    $data = array(
+	    	'contestObject' => array(
+	    		'__type' => 'Pointer',
+	    		'className' => 'Contest',
+	    		'objectId' => $contest->objectId
+	    		),
+	    	'active' => 1,
+	    	);
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player?include=userObject&where=" . json_encode($data));
+    	curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersGet);
+    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    	$response = curl_exec($ch);       
+    	curl_close($ch);
+		$players = json_decode($response);
+		
+		
+		// Has the contest ended?
+		//
+		$contestTimeLeft = strtotime($contest->endtime->iso) - time();
+		if($contestTimeLeft <= 0.0) {
+
+			foreach($players->results as $player) {
+			
+				// Does a human player have the prize?
+				$humanWinner = 0;
+				if($player->hasprize == 1 && ! is_null($player->userObject)) {
+					$humanWinner = 1;
+					
+					// Send a notification to all contest players about the winner
+					$channel = "contest_" . $contest->objectId;
+					$message = $player->userObject->displayname . "has won the " . $contest->name;
+					$data = array('channels' => array($channel), 'data' => array('alert' => $message));
+					$ch = curl_init();
+					curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/push");
+					curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+					curl_setopt($ch, CURLOPT_POST, 1);
+					curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+					$notifresponse = curl_exec($ch);
+					curl_close($ch);
+				}
+			}
+
+			if($humanWinner == 1) {			
+				// The contest is over, break out
+				break;
+			}
+		}
+
+
 		// Remove all bots that don't have the prize
 		
 	
@@ -51,8 +104,8 @@
     	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     	$response = curl_exec($ch);       
     	curl_close($ch);
-		$players = json_decode($response);
-		$playerWithPrize = $players->results[0];
+		$playersFind = json_decode($response);
+		$playerWithPrize = $playersFind->results[0];
 		
 
 		// Has it been more than 3 minutes since this PlayerWithPrize acquired the prize?
@@ -71,28 +124,10 @@
 
 
 
-		// Determine the distance players are from the prize
-		//
-		
-		// Get all players
-	    $data = array(
-	    	'contestObject' => array(
-	    		'__type' => 'Pointer',
-	    		'className' => 'Contest',
-	    		'objectId' => $contest->objectId
-	    		),
-	    	'active' => 1,
-	    	);
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player?include=userObject&where=" . json_encode($data));
-    	curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersGet);
-    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    	$response = curl_exec($ch);       
-    	curl_close($ch);
-		$players = json_decode($response);
-		
 		// How far is each player from the prize?
 		echo "--------------------------------------\n";
+		$playerToAcquire = NULL;
+		$playerToAcquireFeet = 100000;
 		foreach($players->results as $player) {
 			// Skip the player with the prize
 			if(strcmp($player->objectId, $playerWithPrize->objectId) == 0)
@@ -110,92 +145,97 @@
 				echo "Bot - feet: " . $feet . "\n";
 			else
 				echo $player->userObject->displayname . " - feet: " . $feet . "\n";
+
+			// Is the player a bot?
+			if($player->bot > 0)
+				continue;
 				
-				
-			// Check if prize can be acquired
+
+			// Is player is within 100 ft of PlayerWithPrize
 			//
-			// 1. Player is within 100 ft of PlayerWithPrize
-			// 2. Player cannot be a "bot"
-			//
-			if(feet <= 100.0) {
+			if($feet <= 100.0) {
+					
+				if($feet < $playerToAcquireFeet) {
+					$playerToAcquire = $player;
+					$playerToAcquireFeet = $feet;
+				}
+			}
+		}
+		
+
+		// Is there a PlayerToAcquire?
+		//
+		if(! is_null($playerToAcquire)) {
 			
-				// Is the player a bot?
-				if($player->bot > 0)
-					continue;
-				
-				// The playerWithPrize loses the prize
-			    $data = array(
-    				'hasprize' => 0,
-			    	);
-			    $ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player/" . $playerWithPrize->objectId);
-			    curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
-			    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-			    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-			    $updateresponse = curl_exec($ch);       
-			    curl_close($ch);
+			// The playerWithPrize loses the prize
+			$data = array(
+    			'hasprize' => 0,
+			    );
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player/" . $playerWithPrize->objectId);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+			$updateresponse = curl_exec($ch);       
+			curl_close($ch);
 			    
-				// This player acquires the prize
-				$isoDate = gmdate('Y-m-d\TH:i:s.000\Z');
-			    $data = array(
-    				'hasprize' => 1,
-			    	'acquiredprizeAt' => array(
-			    		'__type' => "Date",
-			    		'iso' => $isoDate
-			    		),
-			    	);
-			    $ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player/" . $player->objectId);
-			    curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
-			    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-			    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-			    $updateresponse = curl_exec($ch);       
-			    curl_close($ch);
+			// This player acquires the prize
+			$isoDate = gmdate('Y-m-d\TH:i:s.000\Z');
+			$data = array(
+    			'hasprize' => 1,
+			    'acquiredprizeAt' => array(
+			    	'__type' => "Date",
+			    	'iso' => $isoDate
+			    	),
+			    );
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player/" . $playerToAcquire->objectId);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+			$updateresponse = curl_exec($ch);       
+			curl_close($ch);
 				
-				// Send a Notification to the Winner
-				$channel = "server_" . $player->userObject->objectId;
-				$winnername = "Bot";
-				if(is_null($player->userObject)) {
-					$message = "You have just acquired the prize!  It was dropped by another player.  You have 3 minutes to get away.";
-				}
-				else {
-					$winnername = $player->userObject->displayname;
-					$message = "You have just acquired the prize from " . $playerWithPrize->userObject->displayname . ". You have 3 minutes to get away";
-				}
+			// Send a Notification to the Winner
+			$channel = "server_" . $playerToAcquire->userObject->objectId;
+			$winnername = "Bot";
+			if(is_null($playerToAcquire->userObject)) {
+				$message = "You have just acquired the prize!  It was dropped by another player.  You have 3 minutes to get away.";
+			}
+			else {
+				$winnername = $playerToAcquire->userObject->displayname;
+				$message = "You have just acquired the prize from " . $playerWithPrize->userObject->displayname . ". You have 3 minutes to get away";
+			}
+			$data = array('channels' => array($channel), 'data' => array('alert' => $message));
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/push");
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+			$notifresponse = curl_exec($ch);
+			curl_close($ch);
+
+			// Send a Notification to the Loser
+			$losername = "Bot";
+			if($playerWithPrize->bot == 0) {
+				$channel = "server_" . $playerWithPrize->userObject->objectId;
+				$losername = $playerWithPrize->userObject->displayname;
+				$message = "You have just lost the prize to " . $playerToAcquire->userObject->displayname;
 				$data = array('channels' => array($channel), 'data' => array('alert' => $message));
 				$ch = curl_init();
 				curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/push");
-			    curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
-			    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			    curl_setopt($ch, CURLOPT_POST, 1);
-			    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-			    $notifresponse = curl_exec($ch);
-			    curl_close($ch);
-
-				// Send a Notification to the Loser
-				$losername = "Bot";
-				if($playerWithPrize->bot == 0) {
-					$channel = "server_" . $playerWithPrize->userObject->objectId;
-					$losername = $playerWithPrize->userObject->displayname;
-					$message = "You have just lost the prize to " . $player->userObject->displayname;
-					$data = array('channels' => array($channel), 'data' => array('alert' => $message));
-					$ch = curl_init();
-					curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/push");
-				    curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
-				    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			    	curl_setopt($ch, CURLOPT_POST, 1);
-				    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-				    $notifresponse = curl_exec($ch);       
-				    curl_close($ch);
-				}
-
-				echo $winnername . " has taken the prize from " . $losername . "\n";
-			    
-				// Get out of this loop
-				break;
+				curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+				$notifresponse = curl_exec($ch);       
+				curl_close($ch);
 			}
+
+			echo $winnername . " has taken the prize from " . $losername . "\n";
 		}
 		
 		sleep(5);

@@ -10,11 +10,11 @@
 		A865EBD01603B49D00E43E26 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A865EBCE1603B49D00E43E26 /* Icon.png */; };
 		A865EBD11603B49D00E43E26 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A865EBCF1603B49D00E43E26 /* Icon@2x.png */; };
 		A865EBD41603B4F000E43E26 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A865EBD31603B4F000E43E26 /* CoreLocation.framework */; };
-		A865EBDA1603F2C500E43E26 /* pin-enemy.png in Resources */ = {isa = PBXBuildFile; fileRef = A865EBD91603F2C500E43E26 /* pin-enemy.png */; };
-		A865EBDE1603F6C800E43E26 /* pin-enemy-with-flag.png in Resources */ = {isa = PBXBuildFile; fileRef = A865EBDB1603F6C800E43E26 /* pin-enemy-with-flag.png */; };
-		A865EBDF1603F6C800E43E26 /* pin-me-with-flag.png in Resources */ = {isa = PBXBuildFile; fileRef = A865EBDC1603F6C800E43E26 /* pin-me-with-flag.png */; };
-		A865EBE01603F6C800E43E26 /* pin-me.png in Resources */ = {isa = PBXBuildFile; fileRef = A865EBDD1603F6C800E43E26 /* pin-me.png */; };
 		A865EBE416064A7E00E43E26 /* TimePassedFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = A865EBE316064A7E00E43E26 /* TimePassedFormatter.m */; };
+		A865EBE91607834000E43E26 /* pin-red-flag.png in Resources */ = {isa = PBXBuildFile; fileRef = A865EBE81607834000E43E26 /* pin-red-flag.png */; };
+		A865EBF01607871900E43E26 /* pin-red.png in Resources */ = {isa = PBXBuildFile; fileRef = A865EBEF1607871900E43E26 /* pin-red.png */; };
+		A865EBF21607B29500E43E26 /* pin-green.png in Resources */ = {isa = PBXBuildFile; fileRef = A865EBF11607B29500E43E26 /* pin-green.png */; };
+		A865EBF41607B50300E43E26 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = A865EBF31607B50300E43E26 /* background.png */; };
 		A894F23915FBFCFB0083EC22 /* blue-line.png in Resources */ = {isa = PBXBuildFile; fileRef = A894F23815FBFCFB0083EC22 /* blue-line.png */; };
 		A894F23E15FBFE6C0083EC22 /* ContestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A894F23C15FBFE6C0083EC22 /* ContestViewController.m */; };
 		A894F23F15FBFE6C0083EC22 /* ContestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A894F23D15FBFE6C0083EC22 /* ContestViewController.xib */; };
@@ -93,12 +93,12 @@
 		A865EBCE1603B49D00E43E26 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = images/Icon.png; sourceTree = "<group>"; };
 		A865EBCF1603B49D00E43E26 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "images/Icon@2x.png"; sourceTree = "<group>"; };
 		A865EBD31603B4F000E43E26 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		A865EBD91603F2C500E43E26 /* pin-enemy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pin-enemy.png"; path = "images/pin-enemy.png"; sourceTree = "<group>"; };
-		A865EBDB1603F6C800E43E26 /* pin-enemy-with-flag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pin-enemy-with-flag.png"; path = "images/pin-enemy-with-flag.png"; sourceTree = "<group>"; };
-		A865EBDC1603F6C800E43E26 /* pin-me-with-flag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pin-me-with-flag.png"; path = "images/pin-me-with-flag.png"; sourceTree = "<group>"; };
-		A865EBDD1603F6C800E43E26 /* pin-me.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pin-me.png"; path = "images/pin-me.png"; sourceTree = "<group>"; };
 		A865EBE216064A7E00E43E26 /* TimePassedFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimePassedFormatter.h; sourceTree = "<group>"; };
 		A865EBE316064A7E00E43E26 /* TimePassedFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimePassedFormatter.m; sourceTree = "<group>"; };
+		A865EBE81607834000E43E26 /* pin-red-flag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pin-red-flag.png"; path = "images/pin-red-flag.png"; sourceTree = "<group>"; };
+		A865EBEF1607871900E43E26 /* pin-red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pin-red.png"; path = "images/pin-red.png"; sourceTree = "<group>"; };
+		A865EBF11607B29500E43E26 /* pin-green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pin-green.png"; path = "images/pin-green.png"; sourceTree = "<group>"; };
+		A865EBF31607B50300E43E26 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = background.png; path = images/background.png; sourceTree = "<group>"; };
 		A894F23815FBFCFB0083EC22 /* blue-line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blue-line.png"; path = "images/blue-line.png"; sourceTree = "<group>"; };
 		A894F23B15FBFE6C0083EC22 /* ContestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContestViewController.h; sourceTree = "<group>"; };
 		A894F23C15FBFE6C0083EC22 /* ContestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContestViewController.m; sourceTree = "<group>"; };
@@ -559,10 +559,10 @@
 		A8FA873E15FB914000EC041A /* images */ = {
 			isa = PBXGroup;
 			children = (
-				A865EBDB1603F6C800E43E26 /* pin-enemy-with-flag.png */,
-				A865EBDC1603F6C800E43E26 /* pin-me-with-flag.png */,
-				A865EBDD1603F6C800E43E26 /* pin-me.png */,
-				A865EBD91603F2C500E43E26 /* pin-enemy.png */,
+				A865EBF31607B50300E43E26 /* background.png */,
+				A865EBF11607B29500E43E26 /* pin-green.png */,
+				A865EBEF1607871900E43E26 /* pin-red.png */,
+				A865EBE81607834000E43E26 /* pin-red-flag.png */,
 				A865EBCE1603B49D00E43E26 /* Icon.png */,
 				A865EBCF1603B49D00E43E26 /* Icon@2x.png */,
 				A894F23815FBFCFB0083EC22 /* blue-line.png */,
@@ -637,10 +637,10 @@
 				A894F23F15FBFE6C0083EC22 /* ContestViewController.xib in Resources */,
 				A865EBD01603B49D00E43E26 /* Icon.png in Resources */,
 				A865EBD11603B49D00E43E26 /* Icon@2x.png in Resources */,
-				A865EBDA1603F2C500E43E26 /* pin-enemy.png in Resources */,
-				A865EBDE1603F6C800E43E26 /* pin-enemy-with-flag.png in Resources */,
-				A865EBDF1603F6C800E43E26 /* pin-me-with-flag.png in Resources */,
-				A865EBE01603F6C800E43E26 /* pin-me.png in Resources */,
+				A865EBE91607834000E43E26 /* pin-red-flag.png in Resources */,
+				A865EBF01607871900E43E26 /* pin-red.png in Resources */,
+				A865EBF21607B29500E43E26 /* pin-green.png in Resources */,
+				A865EBF41607B50300E43E26 /* background.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -779,8 +779,8 @@
 					"-fobjc-arc",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "C92686B8-21FB-416E-A499-56172680D6B0";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C92686B8-21FB-416E-A499-56172680D6B0";
+				PROVISIONING_PROFILE = "87AE7DF8-B63E-49E6-A837-550520EA508C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "87AE7DF8-B63E-49E6-A837-550520EA508C";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -808,8 +808,8 @@
 					"-fobjc-arc",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "C92686B8-21FB-416E-A499-56172680D6B0";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C92686B8-21FB-416E-A499-56172680D6B0";
+				PROVISIONING_PROFILE = "87AE7DF8-B63E-49E6-A837-550520EA508C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "87AE7DF8-B63E-49E6-A837-550520EA508C";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

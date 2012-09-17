@@ -24,6 +24,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Add a status button on the nav bar
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(stopButtonPressed:)];
+    self.navigationItem.leftBarButtonItem = leftButton;
+    [leftButton release];
+    
     [self showWaitView:@"Please wait..."];
     
     // Check if I have an existing Player record for this competition
@@ -73,11 +78,12 @@
         else {
             // Grab my Player.objectId
             PFObject *object = [objects objectAtIndex:0];
+
             [Globals setContestPlayerObjectId:object.objectId];
             
             // Save my current location
             [self updateMyLocation:self.mapView.userLocation];
-
+            
             [self dismissWaitView];
             [self refresh];
         }
@@ -100,9 +106,62 @@
     self.initialLocation = nil;
     self.contest = nil;
     self.players = nil;
+    [self.timer invalidate];
     self.timer = nil;
     [super dealloc];
 }
+
+- (IBAction)stopButtonPressed:(id)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confirm Exit" message:@"Are you sure you want to quit this contest?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes",nil];    
+    [alert show];
+    [alert release];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    // NO = 0, YES = 1
+    if(buttonIndex == 0) {
+        return;
+    }
+    
+    // Find my player object
+    Player *playerMe = nil;
+    for(int i=0; i<[self.players count]; i++) {
+        Player *player = [self.players objectAtIndex:i];
+        
+        // Is this player me?  Skip it
+        PFUser *user = [PFUser currentUser];
+        if([user.objectId isEqualToString:player.user.objectId]) {
+            playerMe = player;
+            break;
+        }
+    }
+    
+    if(playerMe.hasPrize) {
+        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Cannot Exit Contest" message:@"You cannot exit a contest while you have the prize." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+        [alert show];
+        return;
+    }
+    
+    // I'm no longer in a contest
+    [Globals setContestPlayerObjectId:nil];
+
+    // Make the player inactive for the contest
+    [self showWaitView:@"Please wait..."];
+    PFObject *playerObject = [PFObject objectWithClassName:@"Player"];
+    [playerObject setObjectId:playerMe.objectId];
+    [playerObject setObject:[NSNumber numberWithInt:0] forKey:@"active"];
+    [playerObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if(error != nil) {
+            [self dismissWaitView];
+            UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Database Error" message:[error description] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+            [alert show];
+            return;
+        }
+
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }];
+}
+
 
 - (NSString *)stringFromTimeLeft:(NSTimeInterval)seconds {
     int minutes = round(seconds / 60.0);
@@ -131,14 +190,21 @@
 }
 
 - (void)updateMyLocation:(MKUserLocation *)userLocation {
-    PFGeoPoint *point = [[[PFGeoPoint alloc] init] autorelease];
-    point.longitude = userLocation.coordinate.longitude;
-    point.latitude = userLocation.coordinate.latitude;
-    PFObject *playerObject = [PFObject objectWithClassName:@"Player"];
-    NSString *objectId = [Globals getContestPlayerObjectId];
-    [playerObject setObjectId:objectId];
-    [playerObject setObject:point forKey:@"location"];
-    [playerObject saveEventually];
+    @try {
+        PFGeoPoint *point = [[[PFGeoPoint alloc] init] autorelease];
+        point.longitude = userLocation.coordinate.longitude;
+        point.latitude = userLocation.coordinate.latitude;
+        PFObject *playerObject = [PFObject objectWithClassName:@"Player"];
+        NSString *objectId = [Globals getContestPlayerObjectId];
+        [playerObject setObjectId:objectId];
+        [playerObject setObject:point forKey:@"location"];
+        [playerObject setObject:[NSNumber numberWithInt:1] forKey:@"active"];
+        [playerObject saveInBackground];
+    }
+    @catch (NSException *exception) {
+        // An exception is sometimes being thrown on PFGeoPoint when returning from the background.  The exception
+        // is an invalid Point range.  We do nothing here to fix the problem.
+    }
 }
 
 - (void)getData {
@@ -181,6 +247,8 @@
             PFUser *user = [PFUser currentUser];
             if([user.objectId isEqualToString:player.user.objectId]) {
                 if(player.hasPrize) {
+                    hasPrize = YES;
+                    
                     NSTimeInterval elapsed = [player.acquiredPrizeAt timeIntervalSinceNow] * -1;
                     NSTimeInterval timeLeft = (60 *3) - elapsed;
                     if(timeLeft > 0) {
@@ -194,6 +262,8 @@
             }
 
             if(player.hasPrize) {
+                hasPrize = NO;
+                
                 NSTimeInterval elapsed = [player.acquiredPrizeAt timeIntervalSinceNow] * -1;
                 NSTimeInterval timeLeft = (60 *3) - elapsed;
                 if(timeLeft > 0)
@@ -223,52 +293,33 @@
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
     [self zoomToUserLocation:userLocation];
+    
+    [self updateMyLocation:userLocation];
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)map viewForAnnotation:(PlayerAnnotation *)annotation {
     static NSString *AnnotationViewID = @"annotationViewID";
     
-    MKAnnotationView *annotationView = (MKAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationViewID];
+    MKPinAnnotationView *pinAnnotationView = (MKPinAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationViewID];
     
-    if (annotationView == nil)
-        annotationView = [[[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID] autorelease];
+    if (pinAnnotationView == nil)
+        pinAnnotationView = [[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID] autorelease];
     
-    if ([annotation isKindOfClass:[MKUserLocation class]])
-        annotationView.image = [UIImage imageNamed:@"pin-me.png"];
-    else if(annotation.player.hasPrize)
-        annotationView.image = [UIImage imageNamed:@"pin-enemy-with-flag.png"];
-    else
-        annotationView.image = [UIImage imageNamed:@"pin-enemy.png"];
-        
-    annotationView.annotation = annotation;
-    
-    return annotationView;
-}
-
-#if 0
-- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(PlayerAnnotation *)annotation {
-    
-    // if it's the user location, just return nil.
-    if ([annotation isKindOfClass:[MKUserLocation class]])
+    if ([annotation isKindOfClass:[MKUserLocation class]]) {
         return nil;
-    
-    // Add the pin
-    MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"pinView"];
-    if(!pinView) {
-        pinView = [[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"pinView"] autorelease];
-    } 
-    else {
-        pinView.annotation = annotation;
     }
-    
-    if(annotation.player.hasPrize)
-        pinView.pinColor = MKPinAnnotationColorGreen;
+    else if(annotation.player.hasPrize)
+        pinAnnotationView.image = [UIImage imageNamed:@"pin-red-flag.png"];
+    else if(annotation.player.bot)
+        pinAnnotationView.image = [UIImage imageNamed:@"pin-green.png"];
     else
-        pinView.pinColor = MKPinAnnotationColorRed;
-    pinView.canShowCallout = YES;
-    return pinView;
+        pinAnnotationView.image = [UIImage imageNamed:@"pin-red.png"];
+        
+    pinAnnotationView.canShowCallout = YES;
+    pinAnnotationView.annotation = annotation;
+    
+    return pinAnnotationView;
 }
-#endif
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
 }

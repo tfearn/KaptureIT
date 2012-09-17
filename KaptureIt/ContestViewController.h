@@ -23,6 +23,8 @@
     Contest *_contest;
     NSMutableArray *_players;
     NSTimer *_timer;
+    
+    BOOL hasPrize;
 }
 @property (nonatomic, retain) MKMapView *mapView;
 @property (nonatomic, retain) UILabel *status;

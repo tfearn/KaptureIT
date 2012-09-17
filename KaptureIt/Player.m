@@ -15,6 +15,7 @@
 @synthesize hasPrize = _hasPrize;
 @synthesize acquiredPrizeAt = _acquiredPrizeAt;
 @synthesize winner = _winner;
+@synthesize bot = _bot;
 @synthesize user = _user;
 @synthesize contest = _contest;
 
@@ -33,6 +34,7 @@
     self.hasPrize = [[object objectForKey:@"hasprize"] intValue];
     self.acquiredPrizeAt = [object objectForKey:@"acquiredprizeAt"];
     self.winner = [[object objectForKey:@"winner"] intValue];
+    self.bot = [[object objectForKey:@"bot"] intValue];
     
     PFObject *userObject = [object objectForKey:@"userObject"];
     if(userObject != nil)
