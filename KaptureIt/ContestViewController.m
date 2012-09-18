@@ -143,7 +143,7 @@
     }
     
     // I'm no longer in a contest
-    [Globals setContestPlayerObjectId:nil];
+    [Globals deleteContestPlayerObjectId];
 
     // Make the player inactive for the contest
     [self showWaitView:@"Please wait..."];
@@ -196,10 +196,12 @@
         point.latitude = userLocation.coordinate.latitude;
         PFObject *playerObject = [PFObject objectWithClassName:@"Player"];
         NSString *objectId = [Globals getContestPlayerObjectId];
-        [playerObject setObjectId:objectId];
-        [playerObject setObject:point forKey:@"location"];
-        [playerObject setObject:[NSNumber numberWithInt:1] forKey:@"active"];
-        [playerObject saveInBackground];
+        if(objectId != nil) {
+            [playerObject setObjectId:objectId];
+            [playerObject setObject:point forKey:@"location"];
+            [playerObject setObject:[NSNumber numberWithInt:1] forKey:@"active"];
+            [playerObject saveInBackground];
+        }
     }
     @catch (NSException *exception) {
         // An exception is sometimes being thrown on PFGeoPoint when returning from the background.  The exception

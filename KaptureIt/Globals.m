@@ -26,7 +26,7 @@
 }
 
 + (void)deleteContestPlayerObjectId {
-    return [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"contest_player_object_id"];
+    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"contest_player_object_id"];
 }
 
 @end

@@ -198,20 +198,4 @@
     [self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
-- (BOOL)playingInContest:(BOOL)foreground {
-    
-    // Check if I have an existing Player record
-    PFUser *user = [PFUser currentUser];
-    PFQuery *query = [PFQuery queryWithClassName:@"Player"];
-    [query whereKey:@"userObject" equalTo:[PFObject objectWithoutDataWithClassName:@"_User" objectId:user.objectId]]; 
-    NSError *error = nil;
-    NSArray *objects = [query findObjects:&error];
-    if(error != nil) {
-        PFObject *object = [objects objectAtIndex:0];
-        [Globals setContestPlayerObjectId:object.objectId];
-        return YES;
-    }
-    return NO;
-}
-
 @end

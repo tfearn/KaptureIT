@@ -255,15 +255,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A865EBE116064A6600E43E26 /* Util */ = {
-			isa = PBXGroup;
-			children = (
-				A865EBE216064A7E00E43E26 /* TimePassedFormatter.h */,
-				A865EBE316064A7E00E43E26 /* TimePassedFormatter.m */,
-			);
-			name = Util;
-			sourceTree = "<group>";
-		};
 		A8E74F9E15FBE51400C2B918 /* Contests */ = {
 			isa = PBXGroup;
 			children = (
@@ -334,12 +325,11 @@
 		A8F76D7715FA6E52008A5E3C /* KaptureIt */ = {
 			isa = PBXGroup;
 			children = (
-				A865EBE116064A6600E43E26 /* Util */,
+				A8F76DB915FA7BF9008A5E3C /* External */,
 				A8FA873E15FB914000EC041A /* images */,
 				A8F76DA415FA703E008A5E3C /* Model */,
-				A8F76DB915FA7BF9008A5E3C /* External */,
-				A8F76DA615FA7846008A5E3C /* ViewControllers */,
 				A8F76DA515FA7831008A5E3C /* Utility */,
+				A8F76DA615FA7846008A5E3C /* ViewControllers */,
 				A8F76D8015FA6E52008A5E3C /* AppDelegate.h */,
 				A8F76D8115FA6E52008A5E3C /* AppDelegate.m */,
 				A8F76D7815FA6E52008A5E3C /* Supporting Files */,
@@ -384,6 +374,8 @@
 				A8F76D9E15FA7037008A5E3C /* SpinnerView.m */,
 				A8F76D9F15FA7038008A5E3C /* WaitView.h */,
 				A8F76DA015FA7038008A5E3C /* WaitView.m */,
+				A865EBE216064A7E00E43E26 /* TimePassedFormatter.h */,
+				A865EBE316064A7E00E43E26 /* TimePassedFormatter.m */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
