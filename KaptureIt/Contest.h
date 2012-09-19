@@ -19,6 +19,7 @@
     PFGeoPoint *_startlocation;
     int _active;
     PFFile *_imagefile;
+    int _acquirerange;
 }
 @property (nonatomic, retain) NSString *objectId;
 @property (nonatomic, retain) NSString *name;
@@ -29,6 +30,7 @@
 @property (nonatomic, retain) PFGeoPoint *startlocation;
 @property int active;
 @property (nonatomic, retain) PFFile *imagefile;
+@property int acquirerange;
 
 - (void)assignValuesFromObject:(PFObject *)object;
 

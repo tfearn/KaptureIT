@@ -72,6 +72,10 @@
                 // Save my current location
                 [self updateMyLocation:self.mapView.userLocation];
                 
+                // Subscribe to the Contest notification
+                NSString *serverChannel = [NSString stringWithFormat:@"contest_%@", self.contest.objectId];
+                [PFPush subscribeToChannelInBackground:serverChannel];
+                
                 [self refresh];
             }];
         }
@@ -84,6 +88,10 @@
             // Save my current location
             [self updateMyLocation:self.mapView.userLocation];
             
+            // Subscribe to the Contest notification
+            NSString *serverChannel = [NSString stringWithFormat:@"contest_%@", self.contest.objectId];
+            [PFPush subscribeToChannelInBackground:serverChannel];
+
             [self dismissWaitView];
             [self refresh];
         }
@@ -158,10 +166,15 @@
             return;
         }
 
+        // Unsubscribe from the Contest push notifications
+        NSError *unsubscribeError = nil;
+        NSString *serverChannel = [NSString stringWithFormat:@"contest_%@", self.contest.objectId];
+        [PFPush unsubscribeFromChannel:serverChannel error:&unsubscribeError];
+        
+
         [self.navigationController popToRootViewControllerAnimated:YES];
     }];
 }
-
 
 - (NSString *)stringFromTimeLeft:(NSTimeInterval)seconds {
     int minutes = round(seconds / 60.0);
@@ -184,7 +197,7 @@
     
     MKCoordinateRegion region;
     region.center = self.mapView.userLocation.coordinate;
-    region.span = MKCoordinateSpanMake(0.005, 0.005);
+    region.span = MKCoordinateSpanMake(0.01, 0.01);
     region = [self.mapView regionThatFits:region];
     [self.mapView setRegion:region animated:YES];
 }
@@ -245,7 +258,7 @@
         for(int i=0; i<[self.players count]; i++) {
             Player *player = [self.players objectAtIndex:i];
             
-            // Is this player me?  Skip it
+            // Is this player me? 
             PFUser *user = [PFUser currentUser];
             if([user.objectId isEqualToString:player.user.objectId]) {
                 if(player.hasPrize) {
@@ -268,10 +281,15 @@
                 
                 NSTimeInterval elapsed = [player.acquiredPrizeAt timeIntervalSinceNow] * -1;
                 NSTimeInterval timeLeft = (60 *3) - elapsed;
-                if(timeLeft > 0)
-                    self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within 100 ft to acquire it. Protected for %.0f seconds.", player.user.displayName, timeLeft];
-                else
-                    self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within 100 ft to acquire it.", player.user.displayName];
+                if(timeLeft > 0) {
+                    self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within %ld ft to acquire it. Protected for %.0f seconds.", player.user.displayName, self.contest.acquirerange, timeLeft];
+                }
+                else {
+                    if(player.bot > 0)
+                        self.status.text = [NSString stringWithFormat:@"The prize has been dropped, get within %ld ft to acquire it.", self.contest.acquirerange];
+                    else
+                        self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within %ld ft to acquire it.", player.user.displayName, self.contest.acquirerange];
+                }
             }
             
             // Add the annotation

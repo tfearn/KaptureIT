@@ -108,12 +108,12 @@
 		$playerWithPrize = $playersFind->results[0];
 		
 
-		// Has it been more than 3 minutes since this PlayerWithPrize acquired the prize?
+		// Has it been more than X seconds since this PlayerWithPrize acquired the prize?
 		//
 		if(! is_null($playerWithPrize->userObject)) {
 			$elapsed = time() - strtotime($playerWithPrize->acquiredprizeAt->iso);
 			echo $playerWithPrize->userObject->displayname . " has held the prize for " . $elapsed . " seconds\n";
-			if($elapsed < (3 * 60)) {
+			if($elapsed < $contest->shieldtime) {
 				sleep(5);
 				continue;
 			}
@@ -151,9 +151,9 @@
 				continue;
 				
 
-			// Is player is within 100 ft of PlayerWithPrize
+			// Is player is within X ft of PlayerWithPrize
 			//
-			if($feet <= 100.0) {
+			if($feet <= $contest->acquirerange) {
 					
 				if($feet < $playerToAcquireFeet) {
 					$playerToAcquire = $player;
@@ -202,11 +202,11 @@
 			$channel = "server_" . $playerToAcquire->userObject->objectId;
 			$winnername = "Bot";
 			if(is_null($playerToAcquire->userObject)) {
-				$message = "You have just acquired the prize!  It was dropped by another player.  You have 3 minutes to get away.";
+				$message = "You have just acquired the prize!  It was dropped by another player.  You have a limited amount of time to get away.";
 			}
 			else {
 				$winnername = $playerToAcquire->userObject->displayname;
-				$message = "You have just acquired the prize from " . $playerWithPrize->userObject->displayname . ". You have 3 minutes to get away";
+				$message = "You have just acquired the prize from " . $playerWithPrize->userObject->displayname . ". You have a limited amount of time to get away";
 			}
 			$data = array('channels' => array($channel), 'data' => array('alert' => $message));
 			$ch = curl_init();

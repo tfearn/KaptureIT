@@ -18,6 +18,7 @@
 @synthesize startlocation = _startlocation;
 @synthesize active = _active;
 @synthesize imagefile = _imagefile;
+@synthesize acquirerange = _acquirerange;
 
 - (void)assignValuesFromObject:(PFObject *)object {
     self.objectId = [object objectId];
@@ -29,6 +30,7 @@
     self.startlocation = [object objectForKey:@"startlocation"];
     self.active = [[object objectForKey:@"active"] intValue];
     self.imagefile = [object objectForKey:@"image"];
+    self.acquirerange = [[object objectForKey:@"acquirerange"] intValue];
 }
 
 - (void)dealloc {

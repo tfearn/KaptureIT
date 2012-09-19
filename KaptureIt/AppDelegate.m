@@ -171,10 +171,11 @@
         [viewController release];
     }
     else {
-        // Check if I have an existing Player record
+        // Check if I have an existing Player record that is active in a contest
         PFUser *user = [PFUser currentUser];
         PFQuery *query = [PFQuery queryWithClassName:@"Player"];
         [query whereKey:@"userObject" equalTo:[PFObject objectWithoutDataWithClassName:@"_User" objectId:user.objectId]];
+        [query whereKey:@"active" equalTo:[NSNumber numberWithInt:1]];
         [query includeKey:@"userObject"];
         [query includeKey:@"contestObject"];
         NSError *error = nil;
