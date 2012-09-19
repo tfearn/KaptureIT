@@ -176,16 +176,6 @@
     }];
 }
 
-- (NSString *)stringFromTimeLeft:(NSTimeInterval)seconds {
-    int minutes = round(seconds / 60.0);
-    if(minutes < 1)
-        return @"less than a minute";
-    else if(minutes == 1)
-        return [NSString stringWithFormat:@"%d minute", minutes];
-    else
-        return [NSString stringWithFormat:@"%d minutes", minutes];
-}
-
 - (void)zoomToUserLocation:(MKUserLocation *)userLocation {
     if (!userLocation)
         return;
@@ -282,13 +272,13 @@
                 NSTimeInterval elapsed = [player.acquiredPrizeAt timeIntervalSinceNow] * -1;
                 NSTimeInterval timeLeft = (60 *3) - elapsed;
                 if(timeLeft > 0) {
-                    self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within %ld ft to acquire it. Protected for %.0f seconds.", player.user.displayName, self.contest.acquirerange, timeLeft];
+                    self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within %d ft to acquire it. Protected for %.0f seconds.", player.user.displayName, self.contest.acquirerange, timeLeft];
                 }
                 else {
                     if(player.bot > 0)
-                        self.status.text = [NSString stringWithFormat:@"The prize has been dropped, get within %ld ft to acquire it.", self.contest.acquirerange];
+                        self.status.text = [NSString stringWithFormat:@"The prize has been dropped, get within %d ft to acquire it.", self.contest.acquirerange];
                     else
-                        self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within %ld ft to acquire it.", player.user.displayName, self.contest.acquirerange];
+                        self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within %d ft to acquire it.", player.user.displayName, self.contest.acquirerange];
                 }
             }
             

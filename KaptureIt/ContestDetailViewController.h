@@ -17,7 +17,10 @@
     IBOutlet UIImageView *_imageView;
     IBOutlet UILabel *_starttimeLabel;
     IBOutlet UILabel *_endtimeLabel;
+    IBOutlet UILabel *_maxplayersLabel;
+    IBOutlet UILabel *_currentplayersLabel;
     IBOutlet UITextView *_descriptionView;
+    IBOutlet UIButton *_joinContestButton;
     Contest *_contest;
 }
 @property (nonatomic, retain) UILabel *titleLabel;
@@ -25,7 +28,10 @@
 @property (nonatomic, retain) UIImageView *imageView;
 @property (nonatomic, retain) UILabel *starttimeLabel;
 @property (nonatomic, retain) UILabel *endtimeLabel;
+@property (nonatomic, retain) UILabel *maxplayersLabel;
+@property (nonatomic, retain) UILabel *currentplayersLabel;
 @property (nonatomic, retain) UITextView *descriptionView;
+@property (nonatomic, retain) UIButton *joinContestButton;
 @property (nonatomic, retain) Contest *contest;
 
 @end
