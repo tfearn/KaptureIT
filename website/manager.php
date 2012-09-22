@@ -52,6 +52,24 @@
 		$players = json_decode($response);
 		
 		
+		// Remove all bots that don't have the prize
+		//
+		foreach($players->results as $player) {			
+			if($player->bot == 1 && $player->hasprize == 0) {
+				$data = array();
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player/" . $player->objectId);
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+				curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+				$deleteresponse = curl_exec($ch);       
+				curl_close($ch);
+			}
+		}
+		
+	
+		
 		// Has the contest ended?
 		//
 		$contestTimeLeft = strtotime($contest->endtime->iso) - time();
@@ -86,9 +104,6 @@
 		}
 
 
-		// Remove all bots that don't have the prize
-		
-	
 		// Get the player with the prize
 	    $data = array(
 	    	'contestObject' => array(
@@ -106,6 +121,55 @@
     	curl_close($ch);
 		$playersFind = json_decode($response);
 		$playerWithPrize = $playersFind->results[0];
+		
+
+		// If the player that has the prize is inactive, give the prize to a bot at that player's last location
+		//
+		if($playerWithPrize->active == 0) {
+		
+			// Take the prize away from the player
+			$data = array(
+    			'hasprize' => 0,
+			    );
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player/" . $playerWithPrize->objectId);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+			$updateresponse = curl_exec($ch);       
+			curl_close($ch);
+			
+			// Create a bot with the prize.  
+			$acquiredDate = gmdate('Y-m-d\TH:i:s.000\Z', time() - (24*60*60));
+			$data = array(
+    			'active' => 1,
+    			'bot' => 1,
+    			'hasprize' => 1,
+    			'contestObject' => array(
+					'__type' => 'Pointer',
+				  	'className' => 'Contest',
+				  	'objectId' => $playerWithPrize->contestObject->objectId
+				  	),
+			    'acquiredprizeAt' => array(
+			    	'__type' => "Date",
+			    	'iso' => $acquiredDate
+			    	),
+			    'location' => array(
+			    	'__type' => "GeoPoint",
+			    	'longitude' => $playerWithPrize->location->longitude,
+			    	'latitude' => $playerWithPrize->location->latitude
+			    	),
+			    );
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player");
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+			$insertresponse = curl_exec($ch);       
+			curl_close($ch);
+		}
 		
 
 		// Has it been more than X seconds since this PlayerWithPrize acquired the prize?

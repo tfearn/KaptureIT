@@ -144,12 +144,6 @@
         }
     }
     
-    if(playerMe.hasPrize) {
-        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Cannot Exit Contest" message:@"You cannot exit a contest while you have the prize." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
-        [alert show];
-        return;
-    }
-    
     // I'm no longer in a contest
     [Globals deleteContestPlayerObjectId];
 
@@ -171,19 +165,14 @@
         NSString *serverChannel = [NSString stringWithFormat:@"contest_%@", self.contest.objectId];
         [PFPush unsubscribeFromChannel:serverChannel error:&unsubscribeError];
         
-
+        // If they have the prize, notify them that they have dropped it
+        if(playerMe.hasPrize) {
+            UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Dropped Prize" message:@"You have dropped the prize." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+            [alert show];
+        }
+        
         [self.navigationController popToRootViewControllerAnimated:YES];
     }];
-}
-
-- (NSString *)stringFromTimeLeft:(NSTimeInterval)seconds {
-    int minutes = round(seconds / 60.0);
-    if(minutes < 1)
-        return @"less than a minute";
-    else if(minutes == 1)
-        return [NSString stringWithFormat:@"%d minute", minutes];
-    else
-        return [NSString stringWithFormat:@"%d minutes", minutes];
 }
 
 - (void)zoomToUserLocation:(MKUserLocation *)userLocation {
@@ -298,8 +287,13 @@
             coordinate.longitude = player.location.longitude;
             
             NSString *name = @"Bot";
-            if(player.user != nil && player.user.displayName != nil)
-                name = player.user.displayName;
+            if(player.user.displayName
+               == nil && player.hasPrize)
+                name = @"Prize";
+            else if(player.user != nil && player.user.displayName != nil) {
+                NSArray *firstlast = [player.user.displayName componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                name = [firstlast objectAtIndex:0];
+            }
             
             PlayerAnnotation *annotation = [[PlayerAnnotation alloc] initWithName:name subname:@"" coordinate:coordinate player:player];
             [self.mapView addAnnotation:annotation]; 
