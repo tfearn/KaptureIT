@@ -65,7 +65,6 @@
     PFQuery *query = [PFQuery queryWithClassName:@"Player"];
     [query whereKey:@"contestObject" equalTo:[PFObject objectWithoutDataWithClassName:@"Contest" objectId:self.contest.objectId]];
     [query whereKey:@"active" equalTo:[NSNumber numberWithInt:1]];
-    [query whereKey:@"bot" equalTo:[NSNumber numberWithInt:0]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self dismissWaitView];
 
