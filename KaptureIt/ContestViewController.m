@@ -271,13 +271,13 @@
                 NSTimeInterval elapsed = [player.acquiredPrizeAt timeIntervalSinceNow] * -1;
                 NSTimeInterval timeLeft = (60 *3) - elapsed;
                 if(timeLeft > 0) {
-                    self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within %ld ft to acquire it. Protected for %.0f seconds.", player.user.displayName, self.contest.acquirerange, timeLeft];
+                    self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within %d ft to acquire it. Protected for %.0f seconds.", player.user.displayName, self.contest.acquirerange, timeLeft];
                 }
                 else {
                     if(player.bot > 0)
-                        self.status.text = [NSString stringWithFormat:@"The prize has been dropped, get within %ld ft to acquire it.", self.contest.acquirerange];
+                        self.status.text = [NSString stringWithFormat:@"The prize has been dropped, get within %d ft to acquire it.", self.contest.acquirerange];
                     else
-                        self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within %ld ft to acquire it.", player.user.displayName, self.contest.acquirerange];
+                        self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within %d ft to acquire it.", player.user.displayName, self.contest.acquirerange];
                 }
             }
             
