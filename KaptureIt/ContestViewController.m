@@ -14,20 +14,28 @@
 @end
 
 @implementation ContestViewController
+@synthesize timeleft = _timeLeft;
 @synthesize mapView = _mapView;
 @synthesize status = _status;
 @synthesize initialLocation = _initialLocation;
 @synthesize contest = _contest;
 @synthesize players = _players;
-@synthesize timer = _timer;
+@synthesize winner = _winner;
+@synthesize refreshTimer = _refreshTimer;
+@synthesize countdownTimer = _countdownTimer;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Add a status button on the nav bar
-    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(stopButtonPressed:)];
-    self.navigationItem.leftBarButtonItem = leftButton;
-    [leftButton release];
+    // Add a close button on the nav bar
+    UIImage *image = [UIImage imageNamed:@"close-button"];
+    UIButton *buttonView = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
+    [buttonView addTarget:self action:@selector(closeButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [buttonView setBackgroundImage:image forState:UIControlStateNormal];
+    UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithCustomView:buttonView];
+    [self.navigationItem setLeftBarButtonItem:closeButton];
+    [buttonView release];
+    [closeButton release];
     
     [self showWaitView:@"Please wait..."];
     
@@ -104,22 +112,29 @@
     // Zoom to our location
     [self zoomToUserLocation:self.mapView.userLocation];
 
+    // Setup a contest countdown timer
+    self.refreshTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countdownTimerCalled) userInfo:nil repeats:YES];
+
     // Setup a timer to periodically retrieve players and update positions
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(refresh) userInfo:nil repeats:YES];
+    self.refreshTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(refreshTimerCalled) userInfo:nil repeats:YES];
 }
 
 - (void)dealloc {
+    self.timeleft = nil;
     self.mapView = nil;
     self.status = nil;
     self.initialLocation = nil;
     self.contest = nil;
     self.players = nil;
-    [self.timer invalidate];
-    self.timer = nil;
+    self.winner = nil;
+    [self.refreshTimer invalidate];
+    self.refreshTimer = nil;
+    [self.countdownTimer invalidate];
+    self.countdownTimer = nil;
     [super dealloc];
 }
 
-- (IBAction)stopButtonPressed:(id)sender {
+- (IBAction)closeButtonPressed:(id)sender {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confirm Exit" message:@"Are you sure you want to quit this contest?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes",nil];    
     [alert show];
     [alert release];
@@ -146,6 +161,10 @@
     
     // I'm no longer in a contest
     [Globals deleteContestPlayerObjectId];
+    
+    // Kill the timers
+    [self.countdownTimer invalidate];
+    [self.refreshTimer invalidate];
 
     // Make the player inactive for the contest
     [self showWaitView:@"Please wait..."];
@@ -173,6 +192,35 @@
         
         [self.navigationController popToRootViewControllerAnimated:YES];
     }];
+}
+
+- (void)countdownTimerCalled {
+    if(self.winner != nil) {
+        [self.countdownTimer invalidate];
+        
+        self.timeleft.text = @"Contest has ended";
+    }
+    else {
+        TimePassedFormatter *timePassedFormatter = [[[TimePassedFormatter alloc] init] autorelease];
+        self.timeleft.text = [timePassedFormatter format:self.contest.endtime];
+    }
+}
+
+- (void)refreshTimerCalled {
+    if(self.winner == nil)
+        [self refresh];
+    else {
+        [self.refreshTimer invalidate];
+        
+        NSString *message = [NSString stringWithFormat:@"The contest \"%@\" has ended.  You have been sent a notification about the winner of this contest.", self.contest.name];
+        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Contest Ended" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+        [alert show];
+        
+        // I'm no longer in this contest
+        [Globals deleteContestPlayerObjectId];
+
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
 }
 
 - (void)zoomToUserLocation:(MKUserLocation *)userLocation {
@@ -243,6 +291,7 @@
                 continue;
             [self.mapView removeAnnotation:annotation];
         }
+        
         // Cycle through the players
         for(int i=0; i<[self.players count]; i++) {
             Player *player = [self.players objectAtIndex:i];
@@ -297,6 +346,24 @@
             
             PlayerAnnotation *annotation = [[PlayerAnnotation alloc] initWithName:name subname:@"" coordinate:coordinate player:player];
             [self.mapView addAnnotation:annotation]; 
+        }
+        
+        // Has the contest ended?
+        NSTimeInterval timeLeft = [self.contest.endtime timeIntervalSinceNow];
+        if(timeLeft <= 0.0) {
+            
+            // Who won?
+            for(int i=0; i<[self.players count]; i++) {
+                Player *player = [self.players objectAtIndex:i];
+                if(player.hasPrize > 0) {
+                    // The winner can't be a bot
+                    if(player.bot == 1)
+                        break;
+                    
+                    self.winner = player;
+                    break;
+                }
+            }
         }
     }];
 }

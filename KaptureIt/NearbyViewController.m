@@ -58,7 +58,7 @@
             // Compare the end date with current time. If greater than skip it
             NSTimeInterval interval = [contest.endtime timeIntervalSinceNow];
             NSTimeInterval hours = interval / 60 / 60;
-            if(hours < 1) {
+            if(hours < 0.0) {
                 [contest release];
                 continue;
             }

@@ -13,8 +13,8 @@
     NSString *_objectId;
     NSString *_name;
     NSString *_subtitle;
-    NSDate *starttime;
-    NSDate *endtime;
+    NSDate *_starttime;
+    NSDate *_endtime;
     NSString *_description;
     PFGeoPoint *_startlocation;
     int _active;

@@ -40,6 +40,10 @@
     // Initialize Facebook
     [PFFacebookUtils initializeWithApplicationId:kFacebookAppID];
 
+    // Initialize Twitter
+    [PFTwitterUtils initializeWithConsumerKey:@"DLRBNUbJJo1tpf4Ur0VFA"
+                               consumerSecret:@"Vttdvn0G1z70S9b8xhlGLyjhcVJHX0z6D1SFqkxEA"];
+
     // Register for notifications
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeSound];
     
@@ -162,9 +166,7 @@
 }
 
 - (void)doLogin {
-    [PFFacebookUtils facebook].accessToken = [[NSUserDefaults standardUserDefaults] objectForKey:kFacebookAccessTokenKey];
-    [PFFacebookUtils facebook].expirationDate = [[NSUserDefaults standardUserDefaults] objectForKey:kFacebookExpirationDateKey];
-    
+
     if([PFUser currentUser] == nil) {
         StartupViewController *viewController = [[StartupViewController alloc] init];
         [self.navigationController presentModalViewController: viewController animated:YES];

@@ -17,20 +17,26 @@
 #import "TimePassedFormatter.h"
 
 @interface ContestViewController : BaseViewController {
+    IBOutlet UILabel *_timeLeft;
     IBOutlet MKMapView *_mapView;
     IBOutlet UILabel *_status;
     CLLocation *_initialLocation;
     Contest *_contest;
     NSMutableArray *_players;
-    NSTimer *_timer;
+    Player *_winner;
+    NSTimer *_refreshTimer;
+    NSTimer *_countdownTimer;
     
     BOOL hasPrize;
 }
+@property (nonatomic, retain) UILabel *timeleft;
 @property (nonatomic, retain) MKMapView *mapView;
 @property (nonatomic, retain) UILabel *status;
 @property (nonatomic, retain) CLLocation *initialLocation;
 @property (nonatomic, retain) Contest *contest;
 @property (nonatomic, retain) NSMutableArray *players;
-@property (nonatomic, retain) NSTimer *timer;
+@property (nonatomic, retain) Player *winner;
+@property (nonatomic, retain) NSTimer *refreshTimer;
+@property (nonatomic, retain) NSTimer *countdownTimer;
 
 @end

@@ -14,7 +14,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UIColor *backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"background.png"]];
+    UIColor *backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"background-startup"]];
     self.view.backgroundColor = backgroundColor;
     [backgroundColor release];    
 }
@@ -36,38 +36,33 @@
             [alert show];
         } 
         else  {
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            [defaults setObject:[PFFacebookUtils facebook].accessToken forKey:kFacebookAccessTokenKey];
-            [defaults setObject:[PFFacebookUtils facebook].expirationDate forKey:kFacebookExpirationDateKey];
-            [defaults synchronize];
-            
-            // Save the user object
-            PFUser *user = [PFUser currentUser];
-            [user saveInBackground];
             
             if(user.isNew) {
                 // Post to Facebook
-                NSMutableDictionary *params = [NSMutableDictionary dictionary];
-                [params setObject:@"Just joined KaptureIt, welcome!" forKey:@"message"];
-                [[PFFacebookUtils facebook]  requestWithMethodName:@"facebook.Stream.publish" andParams:params andHttpMethod:@"POST" andDelegate:nil];
+                PF_FBRequest *request = [PF_FBRequest requestForPostStatusUpdate:@"Just joined KaptureIt, welcome!"];
+                [request startWithCompletionHandler:^(PF_FBRequestConnection *connection, id result, NSError *error) {
+                    // Don't worry about errors on this
+                }];
             }
             
             // Grab the Facebook graph
-            [[PFFacebookUtils facebook] requestWithGraphPath:@"me" andDelegate:self];
+            PF_FBRequest *request = [PF_FBRequest requestForMe];
+            [request startWithCompletionHandler:^(PF_FBRequestConnection *connection, id result, NSError *error) {
+                if(error != nil) {
+                    [self dismissWaitView];
+                    
+                    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Facebook Error" message:@"A Facebook request error occurred, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+                    [alert show];
+                }
+                else {
+                    [self parseFacebookGraph:result];
+                }
+            }];
         }
     }];
 }
 
-- (IBAction)loginWithTwitterButtonPressed:(id)sender {
-}
-
-#pragma mark -
-#pragma mark PF_FBRequestDelegate methods
-
-- (void)request:(PF_FBRequest *)request didReceiveResponse:(NSURLResponse *)response {
-}
-
-- (void)request:(PF_FBRequest *)request didLoad:(id)result {
+- (void)parseFacebookGraph:(id)result {
 	NSDictionary *dict = result;
 	MyLog(@"%@", dict);
     
@@ -134,14 +129,135 @@
         UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Facebook Error" message:@"Could not retrieve Facebook user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
         [alert show];
     }];
-    [picRequest startAsynchronous];   
+    [picRequest startAsynchronous];
 };
 
-- (void)request:(PF_FBRequest *)request didFailWithError:(NSError *)error {
-    [self dismissWaitView];
+- (IBAction)loginWithTwitterButtonPressed:(id)sender {
+    [self showWaitView:@"Please Wait..."];
+    [PFTwitterUtils logInWithTarget:self selector:@selector(twitterLogin:error:)];
+}
+
+- (void)twitterLogin:(PFUser *)user error:(NSError **)error {
     
-    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Facebook Error" message:@"A Facebook request error occurred, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
-    [alert show];
+    if(!user) {
+        [self dismissWaitView];
+        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Twitter Error" message:@"The Twitter login was cancelled.  A Twitter login is required to continue." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+        [alert show];
+    }
+    else  {
+        
+        if(user.isNew) {
+            // Tweet
+            NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1/statuses/update.json"];
+            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+            [[PFTwitterUtils twitter] signRequest:request];
+            [request setHTTPMethod:@"POST"];
+            [request setHTTPBody:[[NSString stringWithFormat:@"status=Just joined KaptureIt!"]
+                                  dataUsingEncoding:NSASCIIStringEncoding]];
+            NSURLResponse *response = nil;
+            NSError *myError = nil;
+            NSData *responseData = [NSURLConnection sendSynchronousRequest:request
+                                                 returningResponse:&response
+                                                             error:&myError];
+            if(myError != nil) {
+                NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+                MyLog(@"%@", responseString);
+            }
+        }
+        
+        // Verify the credentials and store related data
+        NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1/account/verify_credentials.json"];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+        [[PFTwitterUtils twitter] signRequest:request];
+        NSURLResponse *response = nil;
+        NSError *myError = nil;
+        NSData *responseData = [NSURLConnection sendSynchronousRequest:request
+                                                     returningResponse:&response
+                                                                 error:&myError];
+        if(myError != nil) {
+            [self dismissWaitView];
+            UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Twitter Error" message:@"Could not save Twitter user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+            [alert show];
+        }
+        else {
+            NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+            SBJsonParser *jsonParser = [SBJsonParser new];
+            id result = [jsonParser objectWithString:responseString];
+            [jsonParser release];
+            [responseString release];
+            
+            [self parseTwitterData:result];
+        }
+    }
+}
+
+- (void)parseTwitterData:(id)result {
+	NSDictionary *dict = result;
+	MyLog(@"%@", dict);
+    
+    PFUser *user = [PFUser currentUser];
+    NSString *twitter_name = [dict objectForKey:@"screen_name"];
+    
+    // Retrieve the twitter image
+    NSString *imageUrl = [dict objectForKey:@"profile_image_url"];
+    imageUrl = [imageUrl stringByReplacingOccurrencesOfString:@"\\" withString:@""];
+    NSURL *url = [NSURL URLWithString:imageUrl];
+    __block ASIHTTPRequest *picRequest = [ASIHTTPRequest requestWithURL:url];
+    [picRequest setCompletionBlock:^{
+        NSData *imageData = [picRequest responseData];
+        
+        PFFile *imageFile = [PFFile fileWithName:@"image.png" data:imageData];
+        [imageFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if(error != nil) {
+                [self dismissWaitView];
+                UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Twitter Error" message:@"Could not save Twitter user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+                [alert show];
+                return;
+            }
+            
+            // Update the User record
+            [user setObject:twitter_name forKey:@"displayname"];
+            [user setObject:imageUrl forKey:@"imageUrl"];
+            [user setObject:imageFile forKey:@"imageFile"];
+            [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if(error != nil) {
+                    [self dismissWaitView];
+                    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Database Error" message:@"Could not save Twitter user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+                    [alert show];
+                    return;
+                }
+                
+                // Delete any prior TwitterInfo record for this username
+                PFQuery *query = [PFQuery queryWithClassName:@"TwitterInfo"];
+                [query whereKey:@"username" equalTo:user.username];
+                [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                    if(error == nil)
+                        [object deleteEventually];
+                }];
+                
+                // Save the new Twitter data
+                SBJsonWriter *writer = [SBJsonWriter new];
+                NSString *jsonString = [writer stringWithObject:dict];
+                PFObject *twitterInfo = [PFObject objectWithClassName:@"TwitterInfo"];
+                [twitterInfo setObject:jsonString forKey:@"twitter_graph"];
+                [twitterInfo setObject:twitter_name forKey:@"twitter_username"];
+                [twitterInfo setObject:user.username forKey:@"username"];
+                [twitterInfo saveEventually];
+                [writer release];
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationLoginComplete object:self userInfo:nil];
+            }];
+        }];
+    }];
+    [picRequest setFailedBlock:^{
+        [self dismissWaitView];
+        NSError *error = [picRequest error];
+        MyLog(@"%@", [error description]);
+        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Twitter Error" message:@"Could not retrieve Twitter user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+        [alert show];
+    }];
+    [picRequest startAsynchronous];
 };
+
 
 @end

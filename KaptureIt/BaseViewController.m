@@ -12,7 +12,7 @@
 @implementation UINavigationBar (BackgroundImage)
 //This overridden implementation will patch up the NavBar with a custom Image instead of the title
 - (void)drawRect:(CGRect)rect {
-    UIImage *image = [UIImage imageNamed: @"banner.png"];
+    UIImage *image = [UIImage imageNamed: @"banner"];
     [image drawInRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
 }
 @end
@@ -36,12 +36,8 @@
     self.navigationItem.title = @"";
     
     if ([[UINavigationBar class]respondsToSelector:@selector(appearance)]) {
-        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"banner.png"] forBarMetrics:0];
+        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"banner"] forBarMetrics:0];
     }
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
 }
 
 - (void)showWaitView:(NSString *)message {

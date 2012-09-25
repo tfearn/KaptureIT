@@ -13,7 +13,7 @@
 #import "BaseViewController.h"
 #import "JSON.h"
 
-@interface StartupViewController : BaseViewController <PF_FBRequestDelegate> {
+@interface StartupViewController : BaseViewController {
 }
 
 - (IBAction)loginWithFacebookButtonPressed:(id)sender;
