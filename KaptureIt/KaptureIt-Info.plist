@@ -50,5 +50,7 @@
 		<string>Icon.png</string>
 		<string>Icon@2x.png</string>
 	</array>
+	<key>UIPrerenderedIcon</key>
+	<true/>
 </dict>
 </plist>
