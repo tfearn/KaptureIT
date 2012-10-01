@@ -27,10 +27,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleBordered target:self action:@selector(backButtonPressed:)];
-    self.navigationItem.leftBarButtonItem = leftButton;
-    [leftButton release];
-    
+    // Add a back button on the nav bar
+    UIImage *image = [UIImage imageNamed:@"back-button"];
+    UIButton *buttonView = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
+    [buttonView addTarget:self action:@selector(backButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [buttonView setBackgroundImage:image forState:UIControlStateNormal];
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithCustomView:buttonView];
+    [self.navigationItem setLeftBarButtonItem:backButton];
+    [buttonView release];
+    [backButton release];
+        
 	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
 	[dateFormatter setDateFormat:@"ccc, LLL dd, h:mma"];
 

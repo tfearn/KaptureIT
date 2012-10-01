@@ -21,6 +21,7 @@
     PFFile *_imagefile;
     int _acquirerange;
     int _maxplayers;
+    int _shieldtime;
 }
 @property (nonatomic, retain) NSString *objectId;
 @property (nonatomic, retain) NSString *name;
@@ -33,6 +34,7 @@
 @property (nonatomic, retain) PFFile *imagefile;
 @property int acquirerange;
 @property int maxplayers;
+@property int shieldtime;
 
 - (void)assignValuesFromObject:(PFObject *)object;
 

@@ -35,7 +35,11 @@
 		if(days > 1)
 			self.formattedValue = [NSString stringWithFormat:@"%d days", days];
 		else
-			self.formattedValue = [NSString stringWithFormat:@"%d day", days];
+			self.formattedValue = [NSString stringWithFormat:@"%d days", days];
+        if(hours > 1)
+			self.formattedValue = [self.formattedValue stringByAppendingFormat:@", %d hours", hours];
+        else if(hours > 0)
+			self.formattedValue = [self.formattedValue stringByAppendingFormat:@", %d hour", hours];
 	}
 	else if(hours > 0) {
 		if(hours > 1)

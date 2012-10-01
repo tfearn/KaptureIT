@@ -20,6 +20,7 @@
 @synthesize imagefile = _imagefile;
 @synthesize acquirerange = _acquirerange;
 @synthesize maxplayers = _maxplayers;
+@synthesize shieldtime = _shieldtime;
 
 - (void)assignValuesFromObject:(PFObject *)object {
     self.objectId = [object objectId];
@@ -33,6 +34,7 @@
     self.imagefile = [object objectForKey:@"image"];
     self.acquirerange = [[object objectForKey:@"acquirerange"] intValue];
     self.maxplayers = [[object objectForKey:@"maxplayers"] intValue];
+    self.shieldtime = [[object objectForKey:@"shieldtime"] intValue];
 }
 
 - (void)dealloc {

@@ -13,6 +13,7 @@
 @synthesize location = _location;
 @synthesize active = _active;
 @synthesize hasPrize = _hasPrize;
+@synthesize shielded = _shielded;
 @synthesize acquiredPrizeAt = _acquiredPrizeAt;
 @synthesize winner = _winner;
 @synthesize bot = _bot;
@@ -32,6 +33,7 @@
     self.location = [object objectForKey:@"location"];
     self.active = [[object objectForKey:@"active"] intValue];
     self.hasPrize = [[object objectForKey:@"hasprize"] intValue];
+    self.shielded = [[object objectForKey:@"shielded"] intValue];
     self.acquiredPrizeAt = [object objectForKey:@"acquiredprizeAt"];
     self.winner = [[object objectForKey:@"winner"] intValue];
     self.bot = [[object objectForKey:@"bot"] intValue];

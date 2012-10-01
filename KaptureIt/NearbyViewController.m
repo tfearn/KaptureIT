@@ -21,6 +21,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    // Add a refresh button on the nav bar
+    UIImage *image = [UIImage imageNamed:@"refresh-button"];
+    UIButton *buttonView = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
+    [buttonView addTarget:self action:@selector(refresh) forControlEvents:UIControlEventTouchUpInside];
+    [buttonView setBackgroundImage:image forState:UIControlStateNormal];
+    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithCustomView:buttonView];
+    [self.navigationItem setLeftBarButtonItem:refreshButton];
+    [buttonView release];
+    [refreshButton release];
     
     [self refresh];
 }

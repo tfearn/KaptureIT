@@ -13,6 +13,12 @@
    		else 
       		return $miles;
 	}
+	
+	function getFirstName($fullname) 
+	{
+		$arr = explode(' ',trim($fullname));
+		return $arr[0];
+	}
 
 
     require ('globals.inc.php');
@@ -84,7 +90,7 @@
 					
 					// Send a notification to all contest players about the winner
 					$channel = "contest_" . $contest->objectId;
-					$message = $player->userObject->displayname . "has won the " . $contest->name;
+					$message = getFirstName($player->userObject->displayname) . "has won the " . $contest->name;
 					$data = array('channels' => array($channel), 'data' => array('alert' => $message));
 					$ch = curl_init();
 					curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/push");
@@ -181,6 +187,24 @@
 				sleep(5);
 				continue;
 			}
+			else {
+
+				// Remove the shield from the PlayerWithPrize
+				$data = array(
+    				'shielded' => 0
+				    );
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player/" . $playerWithPrize->objectId);
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+				curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+				$updateresponse = curl_exec($ch);       
+				curl_close($ch);
+				
+				// Sleep for 5 seconds and fall through
+				sleep(5);
+			}
 		}
 				
 		
@@ -248,6 +272,7 @@
 			$isoDate = gmdate('Y-m-d\TH:i:s.000\Z');
 			$data = array(
     			'hasprize' => 1,
+    			'shielded' => 1,
 			    'acquiredprizeAt' => array(
 			    	'__type' => "Date",
 			    	'iso' => $isoDate
@@ -265,12 +290,12 @@
 			// Send a Notification to the Winner
 			$channel = "server_" . $playerToAcquire->userObject->objectId;
 			$winnername = "Bot";
-			if(is_null($playerToAcquire->userObject)) {
+			if(is_null($playerWithPrize->userObject)) {
 				$message = "You have just acquired the prize!  It was dropped by another player.  You have a limited amount of time to get away.";
 			}
 			else {
 				$winnername = $playerToAcquire->userObject->displayname;
-				$message = "You have just acquired the prize from " . $playerWithPrize->userObject->displayname . ". You have a limited amount of time to get away";
+				$message = "You have just acquired the prize from " . getFirstName($playerWithPrize->userObject->displayname) . ". You have a limited amount of time to get away";
 			}
 			$data = array('channels' => array($channel), 'data' => array('alert' => $message));
 			$ch = curl_init();
@@ -287,7 +312,7 @@
 			if($playerWithPrize->bot == 0) {
 				$channel = "server_" . $playerWithPrize->userObject->objectId;
 				$losername = $playerWithPrize->userObject->displayname;
-				$message = "You have just lost the prize to " . $playerToAcquire->userObject->displayname;
+				$message = "You have just lost the prize to " . getFirstName($playerToAcquire->userObject->displayname);
 				$data = array('channels' => array($channel), 'data' => array('alert' => $message));
 				$ch = curl_init();
 				curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/push");

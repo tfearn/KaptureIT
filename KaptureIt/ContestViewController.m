@@ -135,7 +135,11 @@
 }
 
 - (IBAction)closeButtonPressed:(id)sender {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confirm Exit" message:@"Are you sure you want to quit this contest?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes",nil];    
+    NSString *message = @"Are you sure you want to quit this contest?";
+    if(hasPrize)
+        message = @"Are you sure you want to quit this contest?  You have the prize and it will be dropped when you quit.";
+        
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confirm Exit" message:message delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes",nil];
     [alert show];
     [alert release];
 }
@@ -259,9 +263,14 @@
     }
 }
 
+- (NSString *)getFirstName:(NSString *)fullname {
+    NSArray *firstlast = [fullname componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    return [firstlast objectAtIndex:0];
+}
+
 - (void)getData {
 
-    // Retrieve the players 
+    // Retrieve the players
     PFQuery *query = [PFQuery queryWithClassName:@"Player"];
     [query whereKey:@"contestObject" equalTo:[PFObject objectWithoutDataWithClassName:@"Contest" objectId:self.contest.objectId]]; 
     [query includeKey:@"contestObject"];
@@ -302,11 +311,8 @@
                 if(player.hasPrize) {
                     hasPrize = YES;
                     
-                    NSTimeInterval elapsed = [player.acquiredPrizeAt timeIntervalSinceNow] * -1;
-                    NSTimeInterval timeLeft = (60 *3) - elapsed;
-                    if(timeLeft > 0) {
-                        self.status.text = [NSString stringWithFormat:@"You have the prize, stay away from others. You are protected for %.0f seconds.", timeLeft];
-                    }
+                    if(player.shielded)
+                        self.status.text = @"You have the prize, stay away from others. You are protected for a short period of time.";
                     else
                         self.status.text = @"You have the prize, stay away from others.";
                 }
@@ -317,16 +323,14 @@
             if(player.hasPrize) {
                 hasPrize = NO;
                 
-                NSTimeInterval elapsed = [player.acquiredPrizeAt timeIntervalSinceNow] * -1;
-                NSTimeInterval timeLeft = (60 *3) - elapsed;
-                if(timeLeft > 0) {
-                    self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within %d ft to acquire it. Protected for %.0f seconds.", player.user.displayName, self.contest.acquirerange, timeLeft];
+                if(player.shielded) {
+                    self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within %d ft to acquire it. This player is currently protected.", [self getFirstName:player.user.displayName], self.contest.acquirerange];
                 }
                 else {
                     if(player.bot > 0)
                         self.status.text = [NSString stringWithFormat:@"The prize has been dropped, get within %d ft to acquire it.", self.contest.acquirerange];
                     else
-                        self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within %d ft to acquire it.", player.user.displayName, self.contest.acquirerange];
+                        self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within %d ft to acquire it.", [self getFirstName:player.user.displayName], self.contest.acquirerange];
                 }
             }
             
@@ -336,13 +340,10 @@
             coordinate.longitude = player.location.longitude;
             
             NSString *name = @"Bot";
-            if(player.user.displayName
-               == nil && player.hasPrize)
+            if(player.user.displayName == nil && player.hasPrize)
                 name = @"Prize";
-            else if(player.user != nil && player.user.displayName != nil) {
-                NSArray *firstlast = [player.user.displayName componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-                name = [firstlast objectAtIndex:0];
-            }
+            else if(player.user != nil && player.user.displayName != nil)
+                name = [self getFirstName:player.user.displayName];
             
             PlayerAnnotation *annotation = [[PlayerAnnotation alloc] initWithName:name subname:@"" coordinate:coordinate player:player];
             [self.mapView addAnnotation:annotation]; 

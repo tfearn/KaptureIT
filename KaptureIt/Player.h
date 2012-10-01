@@ -16,6 +16,7 @@
     PFGeoPoint *_location;
     int _active;
     int _hasPrize;
+    int _shielded;
     NSDate *_acquiredPrizeAt;
     int _winner;
     int _bot;
@@ -26,6 +27,7 @@
 @property (nonatomic, retain) PFGeoPoint *location;
 @property int active;
 @property int hasPrize;
+@property int shielded;
 @property (nonatomic, retain) NSDate *acquiredPrizeAt;
 @property int winner;
 @property int bot;

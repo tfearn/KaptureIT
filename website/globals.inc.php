@@ -1,12 +1,12 @@
 <?php
 	// Define the headers for Parse.com
 	$parseHeadersGet = array( 
-  		"X-Parse-Application-Id: E5JCy0JxXTEHJH5cdvABZYufNSwYCkyZJ63WSB0D", 
-  		"X-Parse-REST-API-Key: rARrWwkvgfOaKoXh2bKsSpHkR0IvU6wfFqWNVYCz" 
+  		"X-Parse-Application-Id: CGGtH9oflEycr7ooNcyauX7hbHbUjF43JId7u7nE", 
+  		"X-Parse-REST-API-Key: MpyRaoZsCfrHCTnyCb0E1KvgeHKveEuWBoZnqoJL" 
 	); 
 	$parseHeadersPut = array( 
-  		"X-Parse-Application-Id: E5JCy0JxXTEHJH5cdvABZYufNSwYCkyZJ63WSB0D", 
-  		"X-Parse-REST-API-Key: rARrWwkvgfOaKoXh2bKsSpHkR0IvU6wfFqWNVYCz",
+  		"X-Parse-Application-Id: CGGtH9oflEycr7ooNcyauX7hbHbUjF43JId7u7nE", 
+  		"X-Parse-REST-API-Key: MpyRaoZsCfrHCTnyCb0E1KvgeHKveEuWBoZnqoJL",
   		"Content-Type: application/json"
 	); 
 	
