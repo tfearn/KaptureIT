@@ -60,7 +60,7 @@
         self.contests = nil;
         _contests = [[NSMutableArray alloc] init];
         
-        for(int i=0; i<[objects count]; i++) {
+        for(int i=0, count=0; i<[objects count]; i++) {
             PFObject *object = [objects objectAtIndex:i];
             Contest *contest = [[Contest alloc] init];
             [contest assignValuesFromObject:object];
@@ -77,7 +77,7 @@
             CLLocationCoordinate2D coordinate;
             coordinate.latitude = contest.startlocation.latitude;
             coordinate.longitude = contest.startlocation.longitude;   
-            Location *annotation = [[[Location alloc] initWithName:contest.name subname:contest.subtitle number:i coordinate:coordinate] autorelease];
+            Location *annotation = [[[Location alloc] initWithName:contest.name subname:contest.subtitle number:count++ coordinate:coordinate] autorelease];
             [self.mapView addAnnotation:annotation];   
             
             [self.contests addObject:contest];
