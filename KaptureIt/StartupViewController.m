@@ -39,7 +39,7 @@
             
             if(user.isNew) {
                 // Post to Facebook
-                PF_FBRequest *request = [PF_FBRequest requestForPostStatusUpdate:@"Just joined KaptureIt, welcome!"];
+                PF_FBRequest *request = [PF_FBRequest requestForPostStatusUpdate:@"Just became part of Kapture | IT. Join in at www.kaptureit.com"];
                 [request startWithCompletionHandler:^(PF_FBRequestConnection *connection, id result, NSError *error) {
                     // Don't worry about errors on this
                 }];
@@ -152,7 +152,7 @@
             NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
             [[PFTwitterUtils twitter] signRequest:request];
             [request setHTTPMethod:@"POST"];
-            [request setHTTPBody:[[NSString stringWithFormat:@"status=Just joined KaptureIt!"]
+            [request setHTTPBody:[[NSString stringWithFormat:@"status=Just became part of @wecaptureit! Join in at www.kaptureit.com"]
                                   dataUsingEncoding:NSASCIIStringEncoding]];
             NSURLResponse *response = nil;
             NSError *myError = nil;
