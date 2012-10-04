@@ -29,9 +29,11 @@
     
     // Add a back button on the nav bar
     UIImage *image = [UIImage imageNamed:@"back-button"];
+    UIImage *imageHighlighted = [UIImage imageNamed:@"back-button-highlighted"];
     UIButton *buttonView = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
     [buttonView addTarget:self action:@selector(backButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [buttonView setBackgroundImage:image forState:UIControlStateNormal];
+    [buttonView setBackgroundImage:imageHighlighted forState:UIControlStateHighlighted];
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithCustomView:buttonView];
     [self.navigationItem setLeftBarButtonItem:backButton];
     [buttonView release];

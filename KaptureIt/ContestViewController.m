@@ -29,9 +29,11 @@
     
     // Add a close button on the nav bar
     UIImage *image = [UIImage imageNamed:@"close-button"];
+    UIImage *imageHighlighted = [UIImage imageNamed:@"close-button-highlighted"];
     UIButton *buttonView = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
     [buttonView addTarget:self action:@selector(closeButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [buttonView setBackgroundImage:image forState:UIControlStateNormal];
+    [buttonView setBackgroundImage:imageHighlighted forState:UIControlStateHighlighted];
     UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithCustomView:buttonView];
     [self.navigationItem setLeftBarButtonItem:closeButton];
     [buttonView release];
