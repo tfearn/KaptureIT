@@ -150,10 +150,10 @@
             // Tweet
             NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1/statuses/update.json"];
             NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-            [[PFTwitterUtils twitter] signRequest:request];
             [request setHTTPMethod:@"POST"];
             [request setHTTPBody:[[NSString stringWithFormat:@"status=Just became part of @wecaptureit! Join in at www.kaptureit.com"]
                                   dataUsingEncoding:NSASCIIStringEncoding]];
+            [[PFTwitterUtils twitter] signRequest:request];
             NSURLResponse *response = nil;
             NSError *myError = nil;
             NSData *responseData = [NSURLConnection sendSynchronousRequest:request
