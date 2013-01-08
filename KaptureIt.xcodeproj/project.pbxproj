@@ -123,6 +123,10 @@
 		A8FA874815FBAE3C00EC041A /* twitter-connect-button.png in Resources */ = {isa = PBXBuildFile; fileRef = A8FA874615FBAE3C00EC041A /* twitter-connect-button.png */; };
 		A8FA874B15FBB46600EC041A /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = A8FA874A15FBB46600EC041A /* Location.m */; };
 		A8FA874E15FBBB6B00EC041A /* Contest.m in Sources */ = {isa = PBXBuildFile; fileRef = A8FA874D15FBBB6B00EC041A /* Contest.m */; };
+		A8FBE767169CD28200770BE8 /* close2-button-highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = A8FBE763169CD28200770BE8 /* close2-button-highlighted.png */; };
+		A8FBE768169CD28200770BE8 /* close2-button-highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A8FBE764169CD28200770BE8 /* close2-button-highlighted@2x.png */; };
+		A8FBE769169CD28200770BE8 /* close2-button.png in Resources */ = {isa = PBXBuildFile; fileRef = A8FBE765169CD28200770BE8 /* close2-button.png */; };
+		A8FBE76A169CD28200770BE8 /* close2-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A8FBE766169CD28200770BE8 /* close2-button@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -296,6 +300,10 @@
 		A8FA874A15FBB46600EC041A /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		A8FA874C15FBBB6B00EC041A /* Contest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contest.h; sourceTree = "<group>"; };
 		A8FA874D15FBBB6B00EC041A /* Contest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contest.m; sourceTree = "<group>"; };
+		A8FBE763169CD28200770BE8 /* close2-button-highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "close2-button-highlighted.png"; path = "images/close2-button-highlighted.png"; sourceTree = "<group>"; };
+		A8FBE764169CD28200770BE8 /* close2-button-highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "close2-button-highlighted@2x.png"; path = "images/close2-button-highlighted@2x.png"; sourceTree = "<group>"; };
+		A8FBE765169CD28200770BE8 /* close2-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "close2-button.png"; path = "images/close2-button.png"; sourceTree = "<group>"; };
+		A8FBE766169CD28200770BE8 /* close2-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "close2-button@2x.png"; path = "images/close2-button@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -616,6 +624,10 @@
 		A8FA873E15FB914000EC041A /* images */ = {
 			isa = PBXGroup;
 			children = (
+				A8FBE763169CD28200770BE8 /* close2-button-highlighted.png */,
+				A8FBE764169CD28200770BE8 /* close2-button-highlighted@2x.png */,
+				A8FBE765169CD28200770BE8 /* close2-button.png */,
+				A8FBE766169CD28200770BE8 /* close2-button@2x.png */,
 				A8962A06169CA48000C33348 /* game-rules.png */,
 				A8962A07169CA48000C33348 /* game-rules@2x.png */,
 				A89629F4169C8DAB00C33348 /* settings-button-highlighted.png */,
@@ -767,6 +779,10 @@
 				A8575616169CCEB30020DBD9 /* pin-enemy@2x.png in Resources */,
 				A8575617169CCEB30020DBD9 /* pin-prize.png in Resources */,
 				A8575618169CCEB30020DBD9 /* pin-prize@2x.png in Resources */,
+				A8FBE767169CD28200770BE8 /* close2-button-highlighted.png in Resources */,
+				A8FBE768169CD28200770BE8 /* close2-button-highlighted@2x.png in Resources */,
+				A8FBE769169CD28200770BE8 /* close2-button.png in Resources */,
+				A8FBE76A169CD28200770BE8 /* close2-button@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

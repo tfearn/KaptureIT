@@ -106,9 +106,9 @@
 }
 
 - (void)settingsPressed {
-    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Cancel" otherButtonTitles:@"Game Rules", @"Kapture it Support", nil];
+    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Game Rules", @"Kapture it Support", nil];
     popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-    [popupQuery showInView:super.view];
+    [popupQuery showInView:self.parentViewController.view];
     [popupQuery release];
 }
 
@@ -119,10 +119,6 @@
     
     switch (buttonIndex) {
         case 0:
-            [actionSheet dismissWithClickedButtonIndex:buttonIndex animated:YES];
-            break;
-            
-        case 1:
         {
             // Game Rules
             GameRulesViewController *controller = [[GameRulesViewController alloc] init];
@@ -133,7 +129,7 @@
             break;
         }
             
-        case 2:
+        case 1:
         {
             // Kapture it Support
             MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
