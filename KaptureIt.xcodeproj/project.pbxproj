@@ -832,8 +832,8 @@
 		A8F76D8C15FA6E52008A5E3C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: ZASI, LLC";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ZASI, LLC";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Todd Fearn (3TVVZ6J6JA)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Todd Fearn (3TVVZ6J6JA)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -849,8 +849,8 @@
 					"-fobjc-arc",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "945D2CFA-A783-4B37-BAD0-46D2AB25101B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "945D2CFA-A783-4B37-BAD0-46D2AB25101B";
+				PROVISIONING_PROFILE = "B718662E-B86B-4E4B-AFB6-0C7C1B4AFBE2";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B718662E-B86B-4E4B-AFB6-0C7C1B4AFBE2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -858,8 +858,8 @@
 		A8F76D8D15FA6E52008A5E3C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: ZASI, LLC";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ZASI, LLC";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Todd Fearn (3TVVZ6J6JA)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Todd Fearn (3TVVZ6J6JA)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -875,8 +875,8 @@
 					"-fobjc-arc",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "945D2CFA-A783-4B37-BAD0-46D2AB25101B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "945D2CFA-A783-4B37-BAD0-46D2AB25101B";
+				PROVISIONING_PROFILE = "B718662E-B86B-4E4B-AFB6-0C7C1B4AFBE2";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B718662E-B86B-4E4B-AFB6-0C7C1B4AFBE2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
