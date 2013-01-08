@@ -8,13 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "MapKit/MapKit.h"
+#import <MessageUI/MFMailComposeViewController.h>
 #import <Parse/Parse.h>
 #import "BaseViewController.h"
 #import "Contest.h"
 #import "Location.h"
 #import "ContestDetailViewController.h"
+#import "GameRulesViewController.h"
 
-@interface NearbyViewController : BaseViewController {
+@interface NearbyViewController : BaseViewController <UIActionSheetDelegate, MFMailComposeViewControllerDelegate> {
     IBOutlet MKMapView *_mapView;
     CLLocation *_initialLocation;
     NSMutableArray *_contests;

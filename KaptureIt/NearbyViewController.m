@@ -34,6 +34,19 @@
     [buttonView release];
     [refreshButton release];
     
+    // Add a settings button on the nav bar
+    image = [UIImage imageNamed:@"settings-button"];
+    imageHighlighted = [UIImage imageNamed:@"settings-button-highlighted"];
+    buttonView = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
+    [buttonView addTarget:self action:@selector(settingsPressed) forControlEvents:UIControlEventTouchUpInside];
+    [buttonView setBackgroundImage:image forState:UIControlStateNormal];
+    [buttonView setBackgroundImage:imageHighlighted forState:UIControlStateHighlighted];
+    UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithCustomView:buttonView];
+    [self.navigationItem setRightBarButtonItem:settingsButton];
+    [buttonView release];
+    [settingsButton release];
+    
+    
     [self refresh];
 }
 
@@ -91,6 +104,73 @@
 - (void)refresh {
 	[self getData];
 }
+
+- (void)settingsPressed {
+    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Cancel" otherButtonTitles:@"Game Rules", @"Kapture it Support", nil];
+    popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+    [popupQuery showInView:super.view];
+    [popupQuery release];
+}
+
+#pragma mark -
+#pragma mark UIActionSheetDelegate Methods
+
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    switch (buttonIndex) {
+        case 0:
+            [actionSheet dismissWithClickedButtonIndex:buttonIndex animated:YES];
+            break;
+            
+        case 1:
+        {
+            // Game Rules
+            GameRulesViewController *controller = [[GameRulesViewController alloc] init];
+            UINavigationController *navBar = [[UINavigationController alloc] initWithRootViewController:controller];
+            [self presentModalViewController:navBar animated:YES];
+            [controller release];
+            [navBar release];
+            break;
+        }
+            
+        case 2:
+        {
+            // Kapture it Support
+            MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+            controller.mailComposeDelegate = self;
+            [controller setToRecipients:[NSArray arrayWithObject: @"support@kaptureit.com"]];
+            [controller setSubject:@"Kapture it Support Request"];
+            [controller setMessageBody:@"" isHTML:NO];
+            [self presentModalViewController:controller animated:YES];
+            [controller release];
+            break;
+        }
+            
+        default:
+            break;
+    }
+}
+
+#pragma mark -
+#pragma mark MFMailComposeViewControllerDelegate Methods
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error;
+{
+	if (result == MFMailComposeResultSent) {
+		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Success" message:@"Your e-mail message has been sent" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+		[alert show];
+	}
+	
+	if(error != nil) {
+		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"E-Mail Error" message:[error description] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+		[alert show];
+	}
+	
+	[self dismissModalViewControllerAnimated:YES];
+}
+
+#pragma mark -
+#pragma mark MapViewDelegate Methods
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
     if ( ! self.initialLocation ) {

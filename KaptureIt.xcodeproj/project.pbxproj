@@ -46,6 +46,15 @@
 		A894F24215FCF7DA0083EC22 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = A894F24115FCF7DA0083EC22 /* Player.m */; };
 		A894F24515FCF8B80083EC22 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = A894F24415FCF8B80083EC22 /* User.m */; };
 		A894F251160001F60083EC22 /* PlayerAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = A894F250160001F60083EC22 /* PlayerAnnotation.m */; };
+		A89629F8169C8DAB00C33348 /* settings-button-highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = A89629F4169C8DAB00C33348 /* settings-button-highlighted.png */; };
+		A89629F9169C8DAB00C33348 /* settings-button-highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A89629F5169C8DAB00C33348 /* settings-button-highlighted@2x.png */; };
+		A89629FA169C8DAB00C33348 /* settings-button.png in Resources */ = {isa = PBXBuildFile; fileRef = A89629F6169C8DAB00C33348 /* settings-button.png */; };
+		A89629FB169C8DAB00C33348 /* settings-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A89629F7169C8DAB00C33348 /* settings-button@2x.png */; };
+		A8962A04169CA36D00C33348 /* GameRulesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A8962A02169CA36D00C33348 /* GameRulesViewController.m */; };
+		A8962A05169CA36D00C33348 /* GameRulesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8962A03169CA36D00C33348 /* GameRulesViewController.xib */; };
+		A8962A08169CA48000C33348 /* game-rules.png in Resources */ = {isa = PBXBuildFile; fileRef = A8962A06169CA48000C33348 /* game-rules.png */; };
+		A8962A09169CA48000C33348 /* game-rules@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A8962A07169CA48000C33348 /* game-rules@2x.png */; };
+		A8962A0B169CBBA400C33348 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8962A0A169CBBA400C33348 /* MessageUI.framework */; };
 		A8E74F9B15FBE50D00C2B918 /* ContestDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A8E74F9915FBE50D00C2B918 /* ContestDetailViewController.m */; };
 		A8E74F9C15FBE50D00C2B918 /* ContestDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8E74F9A15FBE50D00C2B918 /* ContestDetailViewController.xib */; };
 		A8F76D7215FA6E52008A5E3C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8F76D7115FA6E52008A5E3C /* UIKit.framework */; };
@@ -157,6 +166,16 @@
 		A894F24415FCF8B80083EC22 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		A894F24F160001F50083EC22 /* PlayerAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerAnnotation.h; sourceTree = "<group>"; };
 		A894F250160001F60083EC22 /* PlayerAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerAnnotation.m; sourceTree = "<group>"; };
+		A89629F4169C8DAB00C33348 /* settings-button-highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "settings-button-highlighted.png"; path = "images/settings-button-highlighted.png"; sourceTree = "<group>"; };
+		A89629F5169C8DAB00C33348 /* settings-button-highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "settings-button-highlighted@2x.png"; path = "images/settings-button-highlighted@2x.png"; sourceTree = "<group>"; };
+		A89629F6169C8DAB00C33348 /* settings-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "settings-button.png"; path = "images/settings-button.png"; sourceTree = "<group>"; };
+		A89629F7169C8DAB00C33348 /* settings-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "settings-button@2x.png"; path = "images/settings-button@2x.png"; sourceTree = "<group>"; };
+		A8962A01169CA36D00C33348 /* GameRulesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameRulesViewController.h; sourceTree = "<group>"; };
+		A8962A02169CA36D00C33348 /* GameRulesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameRulesViewController.m; sourceTree = "<group>"; };
+		A8962A03169CA36D00C33348 /* GameRulesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GameRulesViewController.xib; sourceTree = "<group>"; };
+		A8962A06169CA48000C33348 /* game-rules.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "game-rules.png"; path = "images/game-rules.png"; sourceTree = "<group>"; };
+		A8962A07169CA48000C33348 /* game-rules@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "game-rules@2x.png"; path = "images/game-rules@2x.png"; sourceTree = "<group>"; };
+		A8962A0A169CBBA400C33348 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		A8E74F9815FBE50D00C2B918 /* ContestDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContestDetailViewController.h; sourceTree = "<group>"; };
 		A8E74F9915FBE50D00C2B918 /* ContestDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContestDetailViewController.m; sourceTree = "<group>"; };
 		A8E74F9A15FBE50D00C2B918 /* ContestDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContestDetailViewController.xib; sourceTree = "<group>"; };
@@ -276,6 +295,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8962A0B169CBBA400C33348 /* MessageUI.framework in Frameworks */,
 				A865EBD41603B4F000E43E26 /* CoreLocation.framework in Frameworks */,
 				A8FA873C15FB909D00EC041A /* MapKit.framework in Frameworks */,
 				A8F76EAF15FB81D8008A5E3C /* SystemConfiguration.framework in Frameworks */,
@@ -305,6 +325,9 @@
 				A8F76D8E15FA6EA5008A5E3C /* NearbyViewController.h */,
 				A8F76D8F15FA6EA6008A5E3C /* NearbyViewController.m */,
 				A8F76D9015FA6EA6008A5E3C /* NearbyViewController.xib */,
+				A8962A01169CA36D00C33348 /* GameRulesViewController.h */,
+				A8962A02169CA36D00C33348 /* GameRulesViewController.m */,
+				A8962A03169CA36D00C33348 /* GameRulesViewController.xib */,
 				A8E74F9815FBE50D00C2B918 /* ContestDetailViewController.h */,
 				A8E74F9915FBE50D00C2B918 /* ContestDetailViewController.m */,
 				A8E74F9A15FBE50D00C2B918 /* ContestDetailViewController.xib */,
@@ -328,6 +351,7 @@
 		A8F76D6215FA6E52008A5E3C = {
 			isa = PBXGroup;
 			children = (
+				A8962A0A169CBBA400C33348 /* MessageUI.framework */,
 				A8F76D7715FA6E52008A5E3C /* KaptureIt */,
 				A8F76D7015FA6E52008A5E3C /* Frameworks */,
 				A8F76D6E15FA6E52008A5E3C /* Products */,
@@ -584,6 +608,12 @@
 		A8FA873E15FB914000EC041A /* images */ = {
 			isa = PBXGroup;
 			children = (
+				A8962A06169CA48000C33348 /* game-rules.png */,
+				A8962A07169CA48000C33348 /* game-rules@2x.png */,
+				A89629F4169C8DAB00C33348 /* settings-button-highlighted.png */,
+				A89629F5169C8DAB00C33348 /* settings-button-highlighted@2x.png */,
+				A89629F6169C8DAB00C33348 /* settings-button.png */,
+				A89629F7169C8DAB00C33348 /* settings-button@2x.png */,
 				A83B9FB6161D22A800FAB217 /* joincontest-button.png */,
 				A83B9FB7161D22A800FAB217 /* joincontest-button-highlighted.png */,
 				A83B9FB8161D22A800FAB217 /* joincontest-button-highlighted@2x.png */,
@@ -714,6 +744,13 @@
 				A83B9FC3161D22A800FAB217 /* joincontest-button@2x.png in Resources */,
 				A83B9FC4161D22A800FAB217 /* refresh-button-highlighted.png in Resources */,
 				A83B9FC5161D22A800FAB217 /* refresh-button-highlighted@2x.png in Resources */,
+				A89629F8169C8DAB00C33348 /* settings-button-highlighted.png in Resources */,
+				A89629F9169C8DAB00C33348 /* settings-button-highlighted@2x.png in Resources */,
+				A89629FA169C8DAB00C33348 /* settings-button.png in Resources */,
+				A89629FB169C8DAB00C33348 /* settings-button@2x.png in Resources */,
+				A8962A05169CA36D00C33348 /* GameRulesViewController.xib in Resources */,
+				A8962A08169CA48000C33348 /* game-rules.png in Resources */,
+				A8962A09169CA48000C33348 /* game-rules@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -769,6 +806,7 @@
 				A894F24515FCF8B80083EC22 /* User.m in Sources */,
 				A894F251160001F60083EC22 /* PlayerAnnotation.m in Sources */,
 				A865EBE416064A7E00E43E26 /* TimePassedFormatter.m in Sources */,
+				A8962A04169CA36D00C33348 /* GameRulesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -849,8 +887,8 @@
 					"-fobjc-arc",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B718662E-B86B-4E4B-AFB6-0C7C1B4AFBE2";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B718662E-B86B-4E4B-AFB6-0C7C1B4AFBE2";
+				PROVISIONING_PROFILE = "91CA44B6-6456-4CF2-8A37-31FB30FDDB1C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "91CA44B6-6456-4CF2-8A37-31FB30FDDB1C";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -875,8 +913,8 @@
 					"-fobjc-arc",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B718662E-B86B-4E4B-AFB6-0C7C1B4AFBE2";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B718662E-B86B-4E4B-AFB6-0C7C1B4AFBE2";
+				PROVISIONING_PROFILE = "91CA44B6-6456-4CF2-8A37-31FB30FDDB1C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "91CA44B6-6456-4CF2-8A37-31FB30FDDB1C";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
