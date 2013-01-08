@@ -393,11 +393,11 @@
         return nil;
     }
     else if(annotation.player.hasPrize)
-        pinAnnotationView.image = [UIImage imageNamed:@"pin-red-flag.png"];
+        pinAnnotationView.image = [UIImage imageNamed:@"pin-flag"];
     else if(annotation.player.bot)
-        pinAnnotationView.image = [UIImage imageNamed:@"pin-green.png"];
+        pinAnnotationView.image = [UIImage imageNamed:@"pin-enemy"];
     else
-        pinAnnotationView.image = [UIImage imageNamed:@"pin-red.png"];
+        pinAnnotationView.image = [UIImage imageNamed:@"pin-enemy"];
         
     pinAnnotationView.canShowCallout = YES;
     pinAnnotationView.annotation = annotation;
