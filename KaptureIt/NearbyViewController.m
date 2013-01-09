@@ -182,24 +182,25 @@
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(Location *)annotation {
+    static NSString *AnnotationViewID = @"annotationViewID";
     
     // if it's the user location, just return nil.
     if ([annotation isKindOfClass:[MKUserLocation class]])
         return nil;
+
+    MKPinAnnotationView *pinView = (MKPinAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationViewID];
     
-    MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"pinView"];
-    if (!pinView) {
-        pinView = [[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"pinView"] autorelease];
-        pinView.pinColor = MKPinAnnotationColorRed;
-        pinView.animatesDrop = YES;
-        pinView.canShowCallout = YES;
-        pinView.tag = annotation.number;
-        
-        UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-        pinView.rightCalloutAccessoryView = rightButton;
-    } else {
-        pinView.annotation = annotation;
-    }
+    if (pinView == nil)
+        pinView = [[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID] autorelease];
+
+    pinView.image = [UIImage imageNamed:@"pin-prize"];
+    //pinView.animatesDrop = YES;
+    pinView.canShowCallout = YES;
+    pinView.tag = annotation.number;
+    
+    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    pinView.rightCalloutAccessoryView = rightButton;
+    
     return pinView;
 }
 
