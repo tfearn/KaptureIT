@@ -367,7 +367,6 @@
 		A8F76D6215FA6E52008A5E3C = {
 			isa = PBXGroup;
 			children = (
-				A8962A0A169CBBA400C33348 /* MessageUI.framework */,
 				A8F76D7715FA6E52008A5E3C /* KaptureIt */,
 				A8F76D7015FA6E52008A5E3C /* Frameworks */,
 				A8F76D6E15FA6E52008A5E3C /* Products */,
@@ -385,6 +384,7 @@
 		A8F76D7015FA6E52008A5E3C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A8962A0A169CBBA400C33348 /* MessageUI.framework */,
 				A8613C0816109BE900CA6DDA /* Parse.framework */,
 				A865EBD31603B4F000E43E26 /* CoreLocation.framework */,
 				A8FA873B15FB909D00EC041A /* MapKit.framework */,

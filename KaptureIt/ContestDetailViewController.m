@@ -13,6 +13,7 @@
 @end
 
 @implementation ContestDetailViewController
+@synthesize scrollView = _scrollView;
 @synthesize titleLabel = _titleLabel;
 @synthesize subtitleLabel = _subtitleLabel;
 @synthesize imageView = _imageView;
@@ -86,9 +87,24 @@
     }];
     
     self.descriptionView.text = self.contest.description;
+    
+    // Set the scroll view size, text view sizes and positions
+    //
+    CGFloat nextY = 255;
+    
+    // Adjust the description textview
+    CGRect frame = self.descriptionView.frame;
+    frame.size.height = self.descriptionView.contentSize.height;
+    self.descriptionView.frame = frame;
+    nextY += frame.size.height;
+    
+    // Resize the scroll view accordingly
+    int scrollViewHeight = MAX(nextY, 420.0);
+    self.scrollView.contentSize = CGSizeMake(320, scrollViewHeight);
 }
 
 - (void)dealloc {
+    self.scrollView = nil;
     self.titleLabel = nil;
     self.subtitleLabel = nil;
     self.imageView = nil;

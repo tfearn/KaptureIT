@@ -12,6 +12,7 @@
 #import "ContestViewController.h"
 
 @interface ContestDetailViewController : BaseViewController {
+    IBOutlet UIScrollView *_scrollView;
     IBOutlet UILabel *_titleLabel;
     IBOutlet UILabel *_subtitleLabel;
     IBOutlet UIImageView *_imageView;
@@ -23,6 +24,7 @@
     IBOutlet UIButton *_joinContestButton;
     Contest *_contest;
 }
+@property (nonatomic, retain) UIScrollView *scrollView;
 @property (nonatomic, retain) UILabel *titleLabel;
 @property (nonatomic, retain) UILabel *subtitleLabel;
 @property (nonatomic, retain) UIImageView *imageView;
