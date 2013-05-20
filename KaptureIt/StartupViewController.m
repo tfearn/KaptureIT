@@ -13,26 +13,18 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    UIColor *backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"background-startup"]];
-    self.view.backgroundColor = backgroundColor;
-    [backgroundColor release];    
-}
-
-- (void)dealloc {
-    [super dealloc];
 }
 
 - (IBAction)loginWithFacebookButtonPressed:(id)sender {
     
 	// TODO: Don't retain this object
-	NSArray* permissions =  [[NSArray arrayWithObjects:@"email", @"publish_stream", @"offline_access", nil] retain];
+	NSArray* permissions =  [NSArray arrayWithObjects:@"email", @"publish_stream", @"offline_access", nil];
     
     [self showWaitView:@"Please Wait..."];
     [PFFacebookUtils logInWithPermissions:permissions block:^(PFUser *user, NSError *error) {
         if(!user) {
             [self dismissWaitView];
-            UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Facebook Error" message:@"The Facebook login was cancelled.  A Facebook login is required to continue." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Facebook Error" message:@"The Facebook login was cancelled.  A Facebook login is required to continue." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
             [alert show];
         } 
         else  {
@@ -51,7 +43,7 @@
                 if(error != nil) {
                     [self dismissWaitView];
                     
-                    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Facebook Error" message:@"A Facebook request error occurred, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Facebook Error" message:@"A Facebook request error occurred, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                     [alert show];
                 }
                 else {
@@ -73,7 +65,7 @@
     // Retrieve the facebook image
     NSString *imageUrl = [NSString stringWithFormat:kUrlFacebookPicture, fb_userid];
     NSURL *url = [NSURL URLWithString:imageUrl];
-    __block ASIHTTPRequest *picRequest = [ASIHTTPRequest requestWithURL:url];
+    __weak ASIHTTPRequest *picRequest = [ASIHTTPRequest requestWithURL:url];
     [picRequest setCompletionBlock:^{
         NSData *imageData = [picRequest responseData];
         
@@ -81,7 +73,7 @@
         [imageFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if(error != nil) {
                 [self dismissWaitView];
-                UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Facebook Error" message:@"Could not save Facebook user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Facebook Error" message:@"Could not save Facebook user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                 [alert show];
                 return;
             }
@@ -93,7 +85,7 @@
             [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if(error != nil) {
                     [self dismissWaitView];
-                    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Database Error" message:@"Could not save Facebook user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Database Error" message:@"Could not save Facebook user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                     [alert show];
                     return;
                 }
@@ -107,16 +99,16 @@
                 }];
                 
                 // Save the new Facebook graph data
-                SBJsonWriter *writer = [SBJsonWriter new];
-                NSString *jsonString = [writer stringWithObject:dict];
+                NSError *jsonError = nil;
+                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&jsonError];
+                NSString *facebookGraph = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
                 PFObject *facebookInfo = [PFObject objectWithClassName:@"FacebookInfo"];
-                [facebookInfo setObject:jsonString forKey:@"fb_graph"];
+                [facebookInfo setObject:facebookGraph forKey:@"fb_graph"];
                 NSString *fb_email = [dict objectForKey:@"email"];
                 [facebookInfo setObject:fb_email forKey:@"fb_email"];
                 [facebookInfo setObject:fb_username forKey:@"fb_username"];
                 [facebookInfo setObject:user.username forKey:@"username"];
                 [facebookInfo saveEventually];
-                [writer release];
                 
                 [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationLoginComplete object:self userInfo:nil];
             }];
@@ -126,7 +118,7 @@
         [self dismissWaitView];
         NSError *error = [picRequest error];
         MyLog(@"%@", [error description]);
-        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Facebook Error" message:@"Could not retrieve Facebook user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Facebook Error" message:@"Could not retrieve Facebook user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
         [alert show];
     }];
     [picRequest startAsynchronous];
@@ -141,7 +133,7 @@
     
     if(!user) {
         [self dismissWaitView];
-        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Twitter Error" message:@"The Twitter login was cancelled.  A Twitter login is required to continue." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Twitter Error" message:@"The Twitter login was cancelled.  A Twitter login is required to continue." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
         [alert show];
     }
     else  {
@@ -176,17 +168,17 @@
                                                                  error:&myError];
         if(myError != nil) {
             [self dismissWaitView];
-            UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Twitter Error" message:@"Could not save Twitter user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Twitter Error" message:@"Could not save Twitter user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
             [alert show];
         }
         else {
             NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-            SBJsonParser *jsonParser = [SBJsonParser new];
-            id result = [jsonParser objectWithString:responseString];
-            [jsonParser release];
-            [responseString release];
-            
-            [self parseTwitterData:result];
+            NSError *jsonError = nil;
+            NSDictionary *JSON =
+            [NSJSONSerialization JSONObjectWithData: [responseString dataUsingEncoding:NSUTF8StringEncoding]
+                                            options: NSJSONReadingMutableContainers
+                                              error: &jsonError];
+            [self parseTwitterData:JSON];
         }
     }
 }
@@ -202,7 +194,7 @@
     NSString *imageUrl = [dict objectForKey:@"profile_image_url"];
     imageUrl = [imageUrl stringByReplacingOccurrencesOfString:@"\\" withString:@""];
     NSURL *url = [NSURL URLWithString:imageUrl];
-    __block ASIHTTPRequest *picRequest = [ASIHTTPRequest requestWithURL:url];
+    __weak ASIHTTPRequest *picRequest = [ASIHTTPRequest requestWithURL:url];
     [picRequest setCompletionBlock:^{
         NSData *imageData = [picRequest responseData];
         
@@ -210,7 +202,7 @@
         [imageFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if(error != nil) {
                 [self dismissWaitView];
-                UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Twitter Error" message:@"Could not save Twitter user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Twitter Error" message:@"Could not save Twitter user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                 [alert show];
                 return;
             }
@@ -222,7 +214,7 @@
             [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if(error != nil) {
                     [self dismissWaitView];
-                    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Database Error" message:@"Could not save Twitter user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Database Error" message:@"Could not save Twitter user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                     [alert show];
                     return;
                 }
@@ -236,14 +228,14 @@
                 }];
                 
                 // Save the new Twitter data
-                SBJsonWriter *writer = [SBJsonWriter new];
-                NSString *jsonString = [writer stringWithObject:dict];
+                NSError *jsonError = nil;
+                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&jsonError];
+                NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
                 PFObject *twitterInfo = [PFObject objectWithClassName:@"TwitterInfo"];
                 [twitterInfo setObject:jsonString forKey:@"twitter_graph"];
                 [twitterInfo setObject:twitter_name forKey:@"twitter_username"];
                 [twitterInfo setObject:user.username forKey:@"username"];
                 [twitterInfo saveEventually];
-                [writer release];
                 
                 [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationLoginComplete object:self userInfo:nil];
             }];
@@ -253,7 +245,7 @@
         [self dismissWaitView];
         NSError *error = [picRequest error];
         MyLog(@"%@", [error description]);
-        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Twitter Error" message:@"Could not retrieve Twitter user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Twitter Error" message:@"Could not retrieve Twitter user information, please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
         [alert show];
     }];
     [picRequest startAsynchronous];

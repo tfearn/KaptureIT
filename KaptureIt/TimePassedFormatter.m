@@ -21,7 +21,7 @@
 
 - (NSString *)format:(NSDate *)date {
 	NSCalendar *sysCalendar = [NSCalendar currentCalendar];
-	NSDate *now = [[[NSDate alloc] init] autorelease];
+	NSDate *now = [[NSDate alloc] init];
 	
     // Determine months, days, etc.
 	unsigned int unitFlags = NSHourCalendarUnit | NSSecondCalendarUnit | NSMinuteCalendarUnit | NSDayCalendarUnit | NSMonthCalendarUnit;
@@ -31,53 +31,20 @@
 	int minutes = (-1 * [breakdownInfo minute]);
     int seconds = (-1 * [breakdownInfo second]);
     
-	if(days > 0) {
-		if(days > 1)
-			self.formattedValue = [NSString stringWithFormat:@"%d days", days];
-		else
-			self.formattedValue = [NSString stringWithFormat:@"%d days", days];
-        if(hours > 1)
-			self.formattedValue = [self.formattedValue stringByAppendingFormat:@", %d hours", hours];
-        else if(hours > 0)
-			self.formattedValue = [self.formattedValue stringByAppendingFormat:@", %d hour", hours];
-	}
-	else if(hours > 0) {
-		if(hours > 1)
-			self.formattedValue = [NSString stringWithFormat:@"%d hours", hours];
-		else
-			self.formattedValue = [NSString stringWithFormat:@"%d hour", hours];
-        if(minutes > 1)
-			self.formattedValue = [self.formattedValue stringByAppendingFormat:@", %d minutes", minutes];
-        else if(hours > 0)
-			self.formattedValue = [self.formattedValue stringByAppendingFormat:@", %d minute", minutes];
-	}
-	else if(minutes > 0) {
-		if(minutes > 1)
-			self.formattedValue = [NSString stringWithFormat:@"%d minutes", minutes];
-		else
-			self.formattedValue= [NSString stringWithFormat:@"%d minute", minutes];
-        if(seconds > 1)
-			self.formattedValue = [self.formattedValue stringByAppendingFormat:@", %d seconds", seconds];
-        else if(seconds > 0)
-			self.formattedValue = [self.formattedValue stringByAppendingFormat:@", %d second", seconds];
-	}
-	else {
-		if(seconds > 1)
-			self.formattedValue = [NSString stringWithFormat:@"%d seconds", seconds];
-		else if(seconds == 1)
-			self.formattedValue= [NSString stringWithFormat:@"%d second", seconds];
-        else if(seconds <= 0)
-            self.formattedValue = @"0 seconds";
-	}
+    if(days < 0)
+        days = 0;
+    if(hours < 0)
+        hours = 0;
+    if(minutes < 0)
+        minutes = 0;
+    if(seconds < 0)
+        seconds = 0;
     
-    self.formattedValue = [self.formattedValue stringByAppendingString:@" left"];
+	if(days > 0)
+        self.formattedValue = [NSString stringWithFormat:@"%dd ", days];
+    self.formattedValue = [self.formattedValue stringByAppendingFormat:@"%2.2d:%2.2d:%2.2d", hours, minutes, seconds];
 	
 	return self.formattedValue;
-}
-
-- (void)dealloc {
-	[_formattedValue release];
-	[super dealloc];
 }
 
 @end

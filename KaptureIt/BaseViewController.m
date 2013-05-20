@@ -9,15 +9,6 @@
 #import "BaseViewController.h"
 
 
-@implementation UINavigationBar (BackgroundImage)
-//This overridden implementation will patch up the NavBar with a custom Image instead of the title
-- (void)drawRect:(CGRect)rect {
-    UIImage *image = [UIImage imageNamed: @"banner"];
-    [image drawInRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-}
-@end
-
-
 @implementation BaseViewController
 @synthesize waitView = _waitView;
 @synthesize spinnerView = _spinnerView;
@@ -32,12 +23,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.navigationItem.title = @"";
-    
-    if ([[UINavigationBar class]respondsToSelector:@selector(appearance)]) {
-        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"banner"] forBarMetrics:0];
-    }
+
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 }
 
 - (void)showWaitView:(NSString *)message {
@@ -54,7 +41,6 @@
 - (void)dismissWaitView {
 	if (_waitView) {
 		[_waitView removeFromSuperview];
-		[_waitView release];
 		_waitView = nil;
 	}
 }
@@ -67,7 +53,6 @@
 - (void)dismissSpinnerView {
 	if (_spinnerView) {
 		[_spinnerView removeFromSuperview];
-		[_spinnerView release];
 		_spinnerView = nil;
 	}
 }

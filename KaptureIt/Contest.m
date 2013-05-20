@@ -16,6 +16,7 @@
 @synthesize endtime = _endtime;
 @synthesize description = _description;
 @synthesize startlocation = _startlocation;
+@synthesize endlocation = _endlocation;
 @synthesize active = _active;
 @synthesize imagefile = _imagefile;
 @synthesize acquirerange = _acquirerange;
@@ -30,24 +31,12 @@
     self.endtime = [object objectForKey:@"endtime"];
     self.description = [object objectForKey:@"description"];
     self.startlocation = [object objectForKey:@"startlocation"];
+    self.endlocation = [object objectForKey:@"endlocation"];
     self.active = [[object objectForKey:@"active"] intValue];
     self.imagefile = [object objectForKey:@"image"];
     self.acquirerange = [[object objectForKey:@"acquirerange"] intValue];
     self.maxplayers = [[object objectForKey:@"maxplayers"] intValue];
     self.shieldtime = [[object objectForKey:@"shieldtime"] intValue];
-}
-
-- (void)dealloc {
-    self.objectId = nil;
-    self.name = nil;
-    self.subtitle = nil;
-    self.starttime = nil;
-    self.endtime = nil;
-    self.description = nil;
-    self.startlocation = nil;
-    self.imagefile = nil;
-    
-    [super dealloc];
 }
 
 @end

@@ -20,6 +20,7 @@
     NSDate *_acquiredPrizeAt;
     int _winner;
     int _bot;
+    int _endlocation;
     User *_user;
     Contest *_contest;
 }
@@ -31,6 +32,7 @@
 @property (nonatomic, retain) NSDate *acquiredPrizeAt;
 @property int winner;
 @property int bot;
+@property int endlocation;
 @property (nonatomic, retain) User *user;
 @property (nonatomic, retain) Contest *contest;
 

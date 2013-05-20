@@ -24,13 +24,6 @@
 @synthesize navigationController = _navigationController;
 @synthesize locationManager = _locationManager;
 
-- (void)dealloc
-{
-    [_window release];
-    [_navigationController release];
-    [super dealloc];
-}
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Initialize Parse
@@ -47,10 +40,13 @@
     // Register for notifications
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeSound];
     
+    // Customize the app appearance
+    [self customizeAppearance];
+    
     // Create the main window
-    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
-    UIViewController *viewController = [[[NearbyViewController alloc] initWithNibName:@"NearbyViewController" bundle:nil] autorelease];
-    self.navigationController = [[[UINavigationController alloc] initWithRootViewController:viewController] autorelease];
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    UIViewController *viewController = [[NearbyViewController alloc] initWithNibName:@"NearbyViewController" bundle:nil];
+    self.navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
     
@@ -137,7 +133,7 @@
     if(objectId != nil) {
         
         // Save our position
-        PFGeoPoint *point = [[[PFGeoPoint alloc] init] autorelease];
+        PFGeoPoint *point = [[PFGeoPoint alloc] init];
         point.longitude = newLocation.coordinate.longitude;
         point.latitude = newLocation.coordinate.latitude;
         PFObject *playerObject = [PFObject objectWithClassName:@"Player"];
@@ -152,6 +148,22 @@
 
 // Private methods
 //
+
+- (void)customizeAppearance {
+
+    // Customize the title text for *all* UINavigationBars
+    [[UINavigationBar appearance] setTitleTextAttributes:
+        [NSDictionary dictionaryWithObjectsAndKeys:
+            [UIColor blackColor],
+            UITextAttributeTextColor,
+            [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.8],
+            UITextAttributeTextShadowColor,
+            [NSValue valueWithUIOffset:UIOffsetMake(0, -1)],
+            UITextAttributeTextShadowOffset,
+            [UIFont fontWithName:@"Avenir Next" size:17.0],
+            UITextAttributeFont,
+            nil]];
+}
 
 - (void)subscribeToPushNotifications {
     
@@ -170,7 +182,6 @@
     if([PFUser currentUser] == nil) {
         StartupViewController *viewController = [[StartupViewController alloc] init];
         [self.navigationController presentModalViewController: viewController animated:YES];
-        [viewController release];
     }
     else {
         // Check if I have an existing Player record that is active in a contest

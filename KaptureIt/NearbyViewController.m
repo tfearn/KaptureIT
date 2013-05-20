@@ -22,39 +22,30 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.navigationItem.title = @"CONTESTS";
+    
     // Add a refresh button on the nav bar
-    UIImage *image = [UIImage imageNamed:@"refresh-button"];
-    UIImage *imageHighlighted = [UIImage imageNamed:@"refresh-button-highlighted"];
+    UIImage *image = [UIImage imageNamed:@"RefreshButton"];
+    UIImage *imageHighlighted = [UIImage imageNamed:@"RefreshButtonHighlighted"];
     UIButton *buttonView = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
     [buttonView addTarget:self action:@selector(refresh) forControlEvents:UIControlEventTouchUpInside];
     [buttonView setBackgroundImage:image forState:UIControlStateNormal];
     [buttonView setBackgroundImage:imageHighlighted forState:UIControlStateHighlighted];
     UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithCustomView:buttonView];
     [self.navigationItem setLeftBarButtonItem:refreshButton];
-    [buttonView release];
-    [refreshButton release];
     
-    // Add a settings button on the nav bar
-    image = [UIImage imageNamed:@"settings-button"];
-    imageHighlighted = [UIImage imageNamed:@"settings-button-highlighted"];
+    // Add a profile button on the nav bar
+    image = [UIImage imageNamed:@"ProfileButton"];
+    imageHighlighted = [UIImage imageNamed:@"ProfileButtonHighlighted"];
     buttonView = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
-    [buttonView addTarget:self action:@selector(settingsPressed) forControlEvents:UIControlEventTouchUpInside];
+    [buttonView addTarget:self action:@selector(profilePressed) forControlEvents:UIControlEventTouchUpInside];
     [buttonView setBackgroundImage:image forState:UIControlStateNormal];
     [buttonView setBackgroundImage:imageHighlighted forState:UIControlStateHighlighted];
     UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithCustomView:buttonView];
     [self.navigationItem setRightBarButtonItem:settingsButton];
-    [buttonView release];
-    [settingsButton release];
     
     
     [self refresh];
-}
-
-- (void)dealloc {
-    self.mapView = nil;
-    self.initialLocation = nil;
-    self.contests = nil;
-    [super dealloc];
 }
 
 - (void)getData {
@@ -67,7 +58,7 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self dismissWaitView];
         if(error != nil) {
-            UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Database Error" message:[error description] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Database Error" message:[error description] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
             [alert show];
             return;
         }
@@ -84,7 +75,6 @@
             NSTimeInterval interval = [contest.endtime timeIntervalSinceNow];
             NSTimeInterval hours = interval / 60 / 60;
             if(hours < 0.0) {
-                [contest release];
                 continue;
             }
             
@@ -92,11 +82,10 @@
             CLLocationCoordinate2D coordinate;
             coordinate.latitude = contest.startlocation.latitude;
             coordinate.longitude = contest.startlocation.longitude;   
-            Location *annotation = [[[Location alloc] initWithName:contest.name subname:contest.subtitle number:count++ coordinate:coordinate] autorelease];
+            Location *annotation = [[Location alloc] initWithName:contest.name subname:contest.subtitle number:count++ coordinate:coordinate];
             [self.mapView addAnnotation:annotation];   
             
             [self.contests addObject:contest];
-            [contest release];
         }
     }];
 }
@@ -105,11 +94,10 @@
 	[self getData];
 }
 
-- (void)settingsPressed {
+- (void)profilePressed {
     UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Game Rules", @"Kapture it Support", nil];
     popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
     [popupQuery showInView:self.parentViewController.view];
-    [popupQuery release];
 }
 
 #pragma mark -
@@ -124,8 +112,6 @@
             GameRulesViewController *controller = [[GameRulesViewController alloc] init];
             UINavigationController *navBar = [[UINavigationController alloc] initWithRootViewController:controller];
             [self presentModalViewController:navBar animated:YES];
-            [controller release];
-            [navBar release];
             break;
         }
             
@@ -138,7 +124,6 @@
             [controller setSubject:@"Kapture it Support Request"];
             [controller setMessageBody:@"" isHTML:NO];
             [self presentModalViewController:controller animated:YES];
-            [controller release];
             break;
         }
             
@@ -153,12 +138,12 @@
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error;
 {
 	if (result == MFMailComposeResultSent) {
-		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Success" message:@"Your e-mail message has been sent" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Your e-mail message has been sent" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
 		[alert show];
 	}
 	
 	if(error != nil) {
-		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"E-Mail Error" message:[error description] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"E-Mail Error" message:[error description] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
 		[alert show];
 	}
 	
@@ -191,7 +176,7 @@
     MKPinAnnotationView *pinView = (MKPinAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationViewID];
     
     if (pinView == nil)
-        pinView = [[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID] autorelease];
+        pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID];
 
     pinView.image = [UIImage imageNamed:@"pin-prize"];
     //pinView.animatesDrop = YES;
@@ -211,7 +196,6 @@
 	ContestDetailViewController *controller = [[ContestDetailViewController alloc] init];
 	controller.contest = contest;
 	[self.navigationController pushViewController:controller animated:YES];
-	[controller release];
 }
 
 

@@ -32,10 +32,4 @@
     return _subname;
 }
 
-- (void)dealloc {
-    self.name = nil;
-    self.subname = nil;
-    [super dealloc];
-}
-
 @end

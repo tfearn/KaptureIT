@@ -14,9 +14,11 @@
 @end
 
 @implementation ContestViewController
+@synthesize toolbar = _toolbar;
 @synthesize timeleft = _timeLeft;
 @synthesize mapView = _mapView;
 @synthesize status = _status;
+@synthesize distance = _distance;
 @synthesize initialLocation = _initialLocation;
 @synthesize contest = _contest;
 @synthesize players = _players;
@@ -27,17 +29,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.navigationItem.title = [self.contest.name uppercaseString];
+    
+    [self.toolbar setFrame:CGRectMake(0, 0, 320, 28)];
+    
     // Add a close button on the nav bar
-    UIImage *image = [UIImage imageNamed:@"close-button"];
-    UIImage *imageHighlighted = [UIImage imageNamed:@"close-button-highlighted"];
+    UIImage *image = [UIImage imageNamed:@"CancelButton"];
+    UIImage *imageHighlighted = [UIImage imageNamed:@"CancelButtonHighlighted"];
     UIButton *buttonView = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
-    [buttonView addTarget:self action:@selector(closeButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [buttonView addTarget:self action:@selector(cancelButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [buttonView setBackgroundImage:image forState:UIControlStateNormal];
     [buttonView setBackgroundImage:imageHighlighted forState:UIControlStateHighlighted];
     UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithCustomView:buttonView];
     [self.navigationItem setLeftBarButtonItem:closeButton];
-    [buttonView release];
-    [closeButton release];
     
     [self showWaitView:@"Please wait..."];
     
@@ -49,7 +53,7 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error != nil) {
             [self dismissWaitView];
-            UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Database Error" message:[error description] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Database Error" message:[error description] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
             [alert show];
             return;
         }
@@ -71,7 +75,7 @@
             [playerObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 [self dismissWaitView];
                 if(error != nil) {
-                    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Database Error" message:[error description] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Database Error" message:[error description] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                     [alert show];
                     return;
                 }
@@ -115,35 +119,19 @@
     [self zoomToUserLocation:self.mapView.userLocation];
 
     // Setup a contest countdown timer
-    self.refreshTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countdownTimerCalled) userInfo:nil repeats:YES];
+    self.countdownTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countdownTimerCalled) userInfo:nil repeats:YES];
 
     // Setup a timer to periodically retrieve players and update positions
-    self.refreshTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(refreshTimerCalled) userInfo:nil repeats:YES];
+    self.refreshTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(refresh) userInfo:nil repeats:YES];
 }
 
-- (void)dealloc {
-    self.timeleft = nil;
-    self.mapView = nil;
-    self.status = nil;
-    self.initialLocation = nil;
-    self.contest = nil;
-    self.players = nil;
-    self.winner = nil;
-    [self.refreshTimer invalidate];
-    self.refreshTimer = nil;
-    [self.countdownTimer invalidate];
-    self.countdownTimer = nil;
-    [super dealloc];
-}
-
-- (IBAction)closeButtonPressed:(id)sender {
+- (IBAction)cancelButtonPressed:(id)sender {
     NSString *message = @"Are you sure you want to quit this contest?";
     if(hasPrize)
         message = @"Are you sure you want to quit this contest?  You have the prize and it will be dropped when you quit.";
         
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confirm Exit" message:message delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes",nil];
     [alert show];
-    [alert release];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -151,6 +139,14 @@
     if(buttonIndex == 0) {
         return;
     }
+    
+    [self endContest];
+    
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+- (void)endContest {
+    self.status.text = @"CONTEST HAS ENDED";
     
     // Find my player object
     Player *playerMe = nil;
@@ -171,61 +167,37 @@
     // Kill the timers
     [self.countdownTimer invalidate];
     [self.refreshTimer invalidate];
-
+    
     // Make the player inactive for the contest
-    [self showWaitView:@"Please wait..."];
+    [self showSpinnerView];
     PFObject *playerObject = [PFObject objectWithClassName:@"Player"];
     [playerObject setObjectId:playerMe.objectId];
     [playerObject setObject:[NSNumber numberWithInt:0] forKey:@"active"];
     [playerObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        [self dismissSpinnerView];
         if(error != nil) {
-            [self dismissWaitView];
-            UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Database Error" message:[error description] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Database Error" message:[error description] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
             [alert show];
             return;
         }
-
+        
         // Unsubscribe from the Contest push notifications
         NSError *unsubscribeError = nil;
         NSString *serverChannel = [NSString stringWithFormat:@"contest_%@", self.contest.objectId];
         [PFPush unsubscribeFromChannel:serverChannel error:&unsubscribeError];
-        
-        // If they have the prize, notify them that they have dropped it
-        if(playerMe.hasPrize) {
-            UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Dropped Prize" message:@"You have dropped the prize." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
-            [alert show];
-        }
-        
-        [self.navigationController popToRootViewControllerAnimated:YES];
     }];
 }
 
 - (void)countdownTimerCalled {
-    if(self.winner != nil) {
-        [self.countdownTimer invalidate];
-        
-        self.timeleft.text = @"Contest has ended";
-    }
-    else {
-        TimePassedFormatter *timePassedFormatter = [[[TimePassedFormatter alloc] init] autorelease];
-        self.timeleft.text = [timePassedFormatter format:self.contest.endtime];
-    }
-}
+    
+    TimePassedFormatter *timePassedFormatter = [[TimePassedFormatter alloc] init];
+    NSString *timeRemaining = [timePassedFormatter format:self.contest.endtime];
+    self.timeleft.text = [NSString stringWithFormat:@" %@ ", timeRemaining];
+    [self.timeleft sizeToFit];
 
-- (void)refreshTimerCalled {
-    if(self.winner == nil)
-        [self refresh];
-    else {
-        [self.refreshTimer invalidate];
-        
-        NSString *message = [NSString stringWithFormat:@"The contest \"%@\" has ended.  You have been sent a notification about the winner of this contest.", self.contest.name];
-        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Contest Ended" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease];
-        [alert show];
-        
-        // I'm no longer in this contest
-        [Globals deleteContestPlayerObjectId];
-
-        [self.navigationController popToRootViewControllerAnimated:YES];
+    NSTimeInterval diff = [self.contest.endtime timeIntervalSinceDate:[NSDate date]];
+    if(diff <= 0.0) {
+        [self endContest];
     }
 }
 
@@ -247,7 +219,7 @@
 
 - (void)updateMyLocation:(MKUserLocation *)userLocation {
     @try {
-        PFGeoPoint *point = [[[PFGeoPoint alloc] init] autorelease];
+        PFGeoPoint *point = [[PFGeoPoint alloc] init];
         point.longitude = userLocation.coordinate.longitude;
         point.latitude = userLocation.coordinate.latitude;
         PFObject *playerObject = [PFObject objectWithClassName:@"Player"];
@@ -257,12 +229,46 @@
             [playerObject setObject:point forKey:@"location"];
             [playerObject setObject:[NSNumber numberWithInt:1] forKey:@"active"];
             [playerObject saveInBackground];
+            
+            [self updateDistance:userLocation];
         }
     }
     @catch (NSException *exception) {
         // An exception is sometimes being thrown on PFGeoPoint when returning from the background.  The exception
         // is an invalid Point range.  We do nothing here to fix the problem.
     }
+}
+
+- (void)updateDistance:(MKUserLocation *)userLocation {
+    CLLocation *myLocation = [[CLLocation alloc] initWithLatitude:userLocation.coordinate.latitude longitude:userLocation.coordinate.longitude];
+    CLLocation *destinationLocation = nil;
+    
+    for(int i=0; i<[self.players count]; i++) {
+        Player *player = [self.players objectAtIndex:i];
+        
+        // Do I have the prize?
+        if(player.hasPrize && [[PFUser currentUser].objectId isEqualToString:player.user.objectId]) {
+            destinationLocation = [[CLLocation alloc] initWithLatitude:self.contest.endlocation.latitude longitude:self.contest.endlocation.longitude];
+            break;
+        }
+        // Another player has the prize?
+        else if(player.hasPrize) {
+            destinationLocation = [[CLLocation alloc] initWithLatitude:player.location.latitude longitude:player.location.longitude];
+            break;
+        }
+    }
+    
+    if(destinationLocation == nil)
+        destinationLocation = [[CLLocation alloc] initWithLatitude:self.contest.startlocation.latitude longitude:self.contest.startlocation.longitude];
+    
+    CLLocationDistance meters = [myLocation distanceFromLocation:destinationLocation];
+    CGFloat feet = meters * 3.28084;
+    self.distance.text = [NSString stringWithFormat:@" %.0f ft ", feet];
+    
+    [self.distance sizeToFit];
+    CGRect frame = self.distance.frame;
+    frame.origin.x = 320 - frame.size.width;
+    self.distance.frame = frame;
 }
 
 - (NSString *)getFirstName:(NSString *)fullname {
@@ -293,7 +299,6 @@
             [player assignValuesFromObject:object];
             
             [self.players addObject:player];
-            [player release];
         }
         
         // Remove the existing annotations - Will get a flash, but ok for now
@@ -311,28 +316,33 @@
             PFUser *user = [PFUser currentUser];
             if([user.objectId isEqualToString:player.user.objectId]) {
                 if(player.hasPrize) {
+                    if(hasPrize == NO) {
+                        NotifHasPrizeViewController *controller = [[NotifHasPrizeViewController alloc] init];
+                        [self presentModalViewController:controller animated:YES];
+                    }
+
                     hasPrize = YES;
+                    self.status.text = [NSString stringWithFormat:@"GET WITHIN %d FEET OF A STORE TO WIN!", self.contest.acquirerange];
+                }
+                else {
+                    if(hasPrize == YES) {
+                        NotifLostPrizeViewController *controller = [[NotifLostPrizeViewController alloc] init];
+                        controller.contest = self.contest;
+                        [self presentModalViewController:controller animated:YES];
+                    }
                     
-                    if(player.shielded)
-                        self.status.text = @"You have the prize, stay away from others. You are protected for a short period of time.";
-                    else
-                        self.status.text = @"You have the prize, stay away from others.";
+                    hasPrize = NO;
                 }
                 
                 continue;
             }
 
             if(player.hasPrize) {
-                hasPrize = NO;
-                
                 if(player.shielded) {
-                    self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within %d ft to acquire it. This player is currently protected.", [self getFirstName:player.user.displayName], self.contest.acquirerange];
+                    self.status.text = [NSString stringWithFormat:@"GET WITHIN %d FEET OF THE PRIZE", self.contest.acquirerange];
                 }
                 else {
-                    if(player.bot > 0)
-                        self.status.text = [NSString stringWithFormat:@"The prize has been dropped, get within %d ft to acquire it.", self.contest.acquirerange];
-                    else
-                        self.status.text = [NSString stringWithFormat:@"%@ has the prize, get within %d ft to acquire it.", [self getFirstName:player.user.displayName], self.contest.acquirerange];
+                    self.status.text = [NSString stringWithFormat:@"GET WITHIN %d FEET OF THE PRIZE", self.contest.acquirerange];
                 }
             }
             
@@ -340,15 +350,21 @@
             CLLocationCoordinate2D coordinate;
             coordinate.latitude = player.location.latitude;
             coordinate.longitude = player.location.longitude;
-            
+
             NSString *name = @"Bot";
             if(player.user.displayName == nil && player.hasPrize)
                 name = @"Prize";
+            else if(player.user != nil && player.bot && player.endlocation) {
+                name = @"Store";
+            }
             else if(player.user != nil && player.user.displayName != nil)
                 name = [self getFirstName:player.user.displayName];
-            
-            PlayerAnnotation *annotation = [[PlayerAnnotation alloc] initWithName:name subname:@"" coordinate:coordinate player:player];
-            [self.mapView addAnnotation:annotation]; 
+
+            // Only show the store if I have the prize
+            if(! [name isEqualToString:@"Store"] || ([name isEqualToString:@"Store"] && hasPrize)) {
+                PlayerAnnotation *annotation = [[PlayerAnnotation alloc] initWithName:name subname:@"" coordinate:coordinate player:player];
+                [self.mapView addAnnotation:annotation];
+            }
         }
         
         // Has the contest ended?
@@ -387,13 +403,15 @@
     MKPinAnnotationView *pinAnnotationView = (MKPinAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationViewID];
     
     if (pinAnnotationView == nil)
-        pinAnnotationView = [[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID] autorelease];
+        pinAnnotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID];
     
     if ([annotation isKindOfClass:[MKUserLocation class]]) {
         return nil;
     }
     else if(annotation.player.hasPrize)
         pinAnnotationView.image = [UIImage imageNamed:@"pin-prize"];
+    else if(annotation.player.bot && annotation.player.endlocation)
+        pinAnnotationView.image = [UIImage imageNamed:@"pin-store"];
     else if(annotation.player.bot)
         pinAnnotationView.image = [UIImage imageNamed:@"pin-enemy"];
     else

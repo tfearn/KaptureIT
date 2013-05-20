@@ -62,10 +62,4 @@
     _spinner.center = CGPointMake(width/2, height/3);
 }
 
-- (void)dealloc {
-	[_spinner release];
-	[_messageLabel release];
-    [super dealloc];
-}
-
 @end

@@ -17,6 +17,7 @@
 @synthesize acquiredPrizeAt = _acquiredPrizeAt;
 @synthesize winner = _winner;
 @synthesize bot = _bot;
+@synthesize endlocation = _endlocation;
 @synthesize user = _user;
 @synthesize contest = _contest;
 
@@ -37,6 +38,7 @@
     self.acquiredPrizeAt = [object objectForKey:@"acquiredprizeAt"];
     self.winner = [[object objectForKey:@"winner"] intValue];
     self.bot = [[object objectForKey:@"bot"] intValue];
+    self.endlocation = [[object objectForKey:@"endlocation"] intValue];
     
     PFObject *userObject = [object objectForKey:@"userObject"];
     if(userObject != nil)
@@ -45,15 +47,6 @@
     PFObject *contestObject = [object objectForKey:@"contestObject"];
     if(contestObject != nil)
         [self.contest assignValuesFromObject:contestObject];
-}
-
-- (void)dealloc {
-    self.objectId = nil;
-    self.location = nil;
-    self.acquiredPrizeAt = nil;
-    self.user = nil;
-    self.contest = nil;
-    [super dealloc];
 }
 
 @end

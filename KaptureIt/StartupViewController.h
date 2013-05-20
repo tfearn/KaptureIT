@@ -11,7 +11,6 @@
 #import "ASIHTTPRequest.h"
 #import "Globals.h"
 #import "BaseViewController.h"
-#import "JSON.h"
 
 @interface StartupViewController : BaseViewController {
 }

@@ -27,15 +27,8 @@
     [buttonView setBackgroundImage:imageHighlighted forState:UIControlStateHighlighted];
     UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithCustomView:buttonView];
     [self.navigationItem setLeftBarButtonItem:closeButton];
-    [buttonView release];
-    [closeButton release];
     
     self.scrollView.contentSize = CGSizeMake(320, 1800);
-}
-
-- (void)dealloc {
-    self.scrollView = nil;
-    [super dealloc];
 }
 
 - (void)closePressed {

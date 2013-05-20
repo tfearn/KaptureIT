@@ -36,9 +36,4 @@
     _spinner.center = CGPointMake(width/2, height/3);
 }
 
-- (void)dealloc {
-	[_spinner release];
-    [super dealloc];
-}
-
 @end

@@ -23,13 +23,4 @@
     self.displayName = [object objectForKey:@"displayname"];
 }
 
-- (void)dealloc {
-    self.objectId = nil;
-    self.username = nil;
-    self.imageFile = nil;
-    self.imageUrl = nil;
-    self.displayName = nil;
-    [super dealloc];
-}
-
 @end

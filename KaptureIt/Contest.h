@@ -17,6 +17,7 @@
     NSDate *_endtime;
     NSString *_description;
     PFGeoPoint *_startlocation;
+    PFGeoPoint *_endlocation;
     int _active;
     PFFile *_imagefile;
     int _acquirerange;
@@ -30,6 +31,7 @@
 @property (nonatomic, retain) NSDate *endtime;
 @property (nonatomic, retain) NSString *description;
 @property (nonatomic, retain) PFGeoPoint *startlocation;
+@property (nonatomic, retain) PFGeoPoint *endlocation;
 @property int active;
 @property (nonatomic, retain) PFFile *imagefile;
 @property int acquirerange;
