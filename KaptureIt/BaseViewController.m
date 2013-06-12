@@ -25,6 +25,7 @@
     [super viewDidLoad];
 
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    self.navigationController.navigationBar.clipsToBounds = YES;
 }
 
 - (void)showWaitView:(NSString *)message {

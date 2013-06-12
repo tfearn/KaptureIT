@@ -33,6 +33,10 @@
     
     [self.toolbar setFrame:CGRectMake(0, 0, 320, 28)];
     
+    // Create a spacer button
+    UIBarButtonItem *spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    [spacer setWidth:8];
+    
     // Add a close button on the nav bar
     UIImage *image = [UIImage imageNamed:@"CancelButton"];
     UIImage *imageHighlighted = [UIImage imageNamed:@"CancelButtonHighlighted"];
@@ -41,7 +45,8 @@
     [buttonView setBackgroundImage:image forState:UIControlStateNormal];
     [buttonView setBackgroundImage:imageHighlighted forState:UIControlStateHighlighted];
     UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithCustomView:buttonView];
-    [self.navigationItem setLeftBarButtonItem:closeButton];
+    NSArray *leftBarButtons = [[NSArray alloc] initWithObjects:spacer, closeButton, nil];
+    [self.navigationItem setLeftBarButtonItems:leftBarButtons];
     
     [self showWaitView:@"Please wait..."];
     
@@ -357,14 +362,21 @@
             else if(player.user != nil && player.bot && player.endlocation) {
                 name = @"Store";
             }
-            else if(player.user != nil && player.user.displayName != nil)
-                name = [self getFirstName:player.user.displayName];
-
-            // Only show the store if I have the prize
-            if(! [name isEqualToString:@"Store"] || ([name isEqualToString:@"Store"] && hasPrize)) {
-                PlayerAnnotation *annotation = [[PlayerAnnotation alloc] initWithName:name subname:@"" coordinate:coordinate player:player];
-                [self.mapView addAnnotation:annotation];
+            else if(player.user != nil && player.user.displayName != nil) {
+                //name = [self getFirstName:player.user.displayName];
+                name = @"Competitor";
             }
+            
+            // Don't show competitors unless I have the prize
+            if([name isEqualToString:@"Competitor"] && hasPrize)
+                continue;
+            
+            // Don't show the store unless I have the prize
+            if([name isEqualToString:@"Store"] && hasPrize)
+                continue;
+            
+            PlayerAnnotation *annotation = [[PlayerAnnotation alloc] initWithName:name subname:@"" coordinate:coordinate player:player];
+            [self.mapView addAnnotation:annotation];
         }
         
         // Has the contest ended?

@@ -22,6 +22,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Create a spacer button
+    UIBarButtonItem *spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    [spacer setWidth:8];
+    
     // Add a back button on the nav bar
     UIImage *image = [UIImage imageNamed:@"BackButton"];
     UIImage *imageHighlighted = [UIImage imageNamed:@"BackButtonHighlighted"];
@@ -30,7 +34,8 @@
     [buttonView setBackgroundImage:image forState:UIControlStateNormal];
     [buttonView setBackgroundImage:imageHighlighted forState:UIControlStateHighlighted];
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithCustomView:buttonView];
-    [self.navigationItem setLeftBarButtonItem:backButton];
+    NSArray *leftBarButtons = [[NSArray alloc] initWithObjects:spacer, backButton, nil];
+    [self.navigationItem setLeftBarButtonItems:leftBarButtons];
     
     self.navigationItem.title = [self.contest.name uppercaseString];
     
@@ -63,6 +68,29 @@
 }
 
 - (IBAction)joinContestButtonPressed:(id)sender {
+
+#if 0
+    if([PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) {
+        // Post to Facebook
+        NSString *message = [NSString stringWithFormat:@"Just joined the '%@' contest via Kapture | IT.", self.contest.name];
+        PF_FBRequest *request = [PF_FBRequest requestForPostStatusUpdate:message];
+        [request startWithCompletionHandler:^(PF_FBRequestConnection *connection, id result, NSError *error) {
+        }];
+    }
+    if([PFTwitterUtils isLinkedWithUser:[PFUser currentUser]]) {
+        // Tweet
+        NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1/statuses/update.json"];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+        [request setHTTPMethod:@"POST"];
+        [request setHTTPBody:[[NSString stringWithFormat:@"status=Just joined the '%@' contest via @wecaptureit!", self.contest.name]
+                              dataUsingEncoding:NSASCIIStringEncoding]];
+        [[PFTwitterUtils twitter] signRequest:request];
+        NSURLResponse *response = nil;
+        NSError *myError = nil;
+        [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&myError];
+    }
+#endif
+    
 	ContestViewController *controller = [[ContestViewController alloc] init];
 	controller.contest = self.contest;
 	[self.navigationController pushViewController:controller animated:YES];

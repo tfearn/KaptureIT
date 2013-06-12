@@ -163,6 +163,9 @@
             [UIFont fontWithName:@"Avenir Next" size:17.0],
             UITextAttributeFont,
             nil]];
+    
+    // Remove the drop shadow on all UINavigationBars
+    [[UINavigationBar appearance] setShadowImage:[[UIImage alloc] init]];
 }
 
 - (void)subscribeToPushNotifications {

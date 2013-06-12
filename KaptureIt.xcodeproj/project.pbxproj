@@ -133,6 +133,16 @@
 		A8FBE768169CD28200770BE8 /* close2-button-highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A8FBE764169CD28200770BE8 /* close2-button-highlighted@2x.png */; };
 		A8FBE769169CD28200770BE8 /* close2-button.png in Resources */ = {isa = PBXBuildFile; fileRef = A8FBE765169CD28200770BE8 /* close2-button.png */; };
 		A8FBE76A169CD28200770BE8 /* close2-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A8FBE766169CD28200770BE8 /* close2-button@2x.png */; };
+		E01EE45117690D4A00A40DBC /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E01EE44F17690D4A00A40DBC /* ProfileViewController.m */; };
+		E01EE45217690D4A00A40DBC /* ProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E01EE45017690D4A00A40DBC /* ProfileViewController.xib */; };
+		E01EE45417690F7500A40DBC /* default-user.png in Resources */ = {isa = PBXBuildFile; fileRef = E01EE45317690F7500A40DBC /* default-user.png */; };
+		E01EE45717690FCB00A40DBC /* ProfileViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E01EE45617690FCB00A40DBC /* ProfileViewCell.m */; };
+		E01EE45917690FE300A40DBC /* ProfileViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E01EE45817690FE300A40DBC /* ProfileViewCell.xib */; };
+		E01EE45C176911DA00A40DBC /* Prize.m in Sources */ = {isa = PBXBuildFile; fileRef = E01EE45B176911DA00A40DBC /* Prize.m */; };
+		E01EE46117691A2C00A40DBC /* SettingsButtonHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = E01EE45D17691A2B00A40DBC /* SettingsButtonHighlighted.png */; };
+		E01EE46217691A2C00A40DBC /* SettingsButton.png in Resources */ = {isa = PBXBuildFile; fileRef = E01EE45E17691A2B00A40DBC /* SettingsButton.png */; };
+		E01EE46317691A2C00A40DBC /* SettingsButtonHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E01EE45F17691A2B00A40DBC /* SettingsButtonHighlighted@2x.png */; };
+		E01EE46417691A2C00A40DBC /* SettingsButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E01EE46017691A2B00A40DBC /* SettingsButton@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -311,6 +321,19 @@
 		A8FBE764169CD28200770BE8 /* close2-button-highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "close2-button-highlighted@2x.png"; path = "images/close2-button-highlighted@2x.png"; sourceTree = "<group>"; };
 		A8FBE765169CD28200770BE8 /* close2-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "close2-button.png"; path = "images/close2-button.png"; sourceTree = "<group>"; };
 		A8FBE766169CD28200770BE8 /* close2-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "close2-button@2x.png"; path = "images/close2-button@2x.png"; sourceTree = "<group>"; };
+		E01EE44E17690D4A00A40DBC /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
+		E01EE44F17690D4A00A40DBC /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
+		E01EE45017690D4A00A40DBC /* ProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileViewController.xib; sourceTree = "<group>"; };
+		E01EE45317690F7500A40DBC /* default-user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "default-user.png"; path = "images/default-user.png"; sourceTree = "<group>"; };
+		E01EE45517690FCB00A40DBC /* ProfileViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewCell.h; sourceTree = "<group>"; };
+		E01EE45617690FCB00A40DBC /* ProfileViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewCell.m; sourceTree = "<group>"; };
+		E01EE45817690FE300A40DBC /* ProfileViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileViewCell.xib; sourceTree = "<group>"; };
+		E01EE45A176911DA00A40DBC /* Prize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prize.h; sourceTree = "<group>"; };
+		E01EE45B176911DA00A40DBC /* Prize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Prize.m; sourceTree = "<group>"; };
+		E01EE45D17691A2B00A40DBC /* SettingsButtonHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SettingsButtonHighlighted.png; path = images/SettingsButtonHighlighted.png; sourceTree = "<group>"; };
+		E01EE45E17691A2B00A40DBC /* SettingsButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SettingsButton.png; path = images/SettingsButton.png; sourceTree = "<group>"; };
+		E01EE45F17691A2B00A40DBC /* SettingsButtonHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SettingsButtonHighlighted@2x.png"; path = "images/SettingsButtonHighlighted@2x.png"; sourceTree = "<group>"; };
+		E01EE46017691A2B00A40DBC /* SettingsButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SettingsButton@2x.png"; path = "images/SettingsButton@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -354,9 +377,6 @@
 				A894F23B15FBFE6C0083EC22 /* ContestViewController.h */,
 				A894F23C15FBFE6C0083EC22 /* ContestViewController.m */,
 				A894F23D15FBFE6C0083EC22 /* ContestViewController.xib */,
-				A8962A01169CA36D00C33348 /* GameRulesViewController.h */,
-				A8962A02169CA36D00C33348 /* GameRulesViewController.m */,
-				A8962A03169CA36D00C33348 /* GameRulesViewController.xib */,
 				A8B1EDB6174A95B7003C06CD /* NotifHasPrizeViewController.h */,
 				A8B1EDB7174A95B7003C06CD /* NotifHasPrizeViewController.m */,
 				A8B1EDB8174A95B7003C06CD /* NotifHasPrizeViewController.xib */,
@@ -454,6 +474,8 @@
 				A8FA874A15FBB46600EC041A /* Location.m */,
 				A8FA874C15FBBB6B00EC041A /* Contest.h */,
 				A8FA874D15FBBB6B00EC041A /* Contest.m */,
+				E01EE45A176911DA00A40DBC /* Prize.h */,
+				E01EE45B176911DA00A40DBC /* Prize.m */,
 				A894F24015FCF7DA0083EC22 /* Player.h */,
 				A894F24115FCF7DA0083EC22 /* Player.m */,
 				A894F24F160001F50083EC22 /* PlayerAnnotation.h */,
@@ -482,6 +504,7 @@
 			children = (
 				A8E74F9F15FBE52000C2B918 /* Login */,
 				A8E74F9E15FBE51400C2B918 /* Contests */,
+				E01EE44D17690D0E00A40DBC /* Profile */,
 				A8F76D9815FA6FD7008A5E3C /* BaseViewController.h */,
 				A8F76D9915FA6FD8008A5E3C /* BaseViewController.m */,
 			);
@@ -615,6 +638,11 @@
 		A8FA873E15FB914000EC041A /* images */ = {
 			isa = PBXGroup;
 			children = (
+				E01EE45D17691A2B00A40DBC /* SettingsButtonHighlighted.png */,
+				E01EE45E17691A2B00A40DBC /* SettingsButton.png */,
+				E01EE45F17691A2B00A40DBC /* SettingsButtonHighlighted@2x.png */,
+				E01EE46017691A2B00A40DBC /* SettingsButton@2x.png */,
+				E01EE45317690F7500A40DBC /* default-user.png */,
 				A8B1EDC0174A985D003C06CD /* BackgroundStolen.png */,
 				A8B1EDC1174A985D003C06CD /* BackgroundStolen@2x.png */,
 				A8B1EDC2174A985D003C06CD /* StolenButton.png */,
@@ -676,6 +704,22 @@
 			name = images;
 			sourceTree = "<group>";
 		};
+		E01EE44D17690D0E00A40DBC /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				E01EE44E17690D4A00A40DBC /* ProfileViewController.h */,
+				E01EE44F17690D4A00A40DBC /* ProfileViewController.m */,
+				E01EE45017690D4A00A40DBC /* ProfileViewController.xib */,
+				E01EE45517690FCB00A40DBC /* ProfileViewCell.h */,
+				E01EE45617690FCB00A40DBC /* ProfileViewCell.m */,
+				E01EE45817690FE300A40DBC /* ProfileViewCell.xib */,
+				A8962A01169CA36D00C33348 /* GameRulesViewController.h */,
+				A8962A02169CA36D00C33348 /* GameRulesViewController.m */,
+				A8962A03169CA36D00C33348 /* GameRulesViewController.xib */,
+			);
+			name = Profile;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -702,7 +746,7 @@
 		A8F76D6415FA6E52008A5E3C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = A8F76D6715FA6E52008A5E3C /* Build configuration list for PBXProject "KaptureIt" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -792,6 +836,13 @@
 				A8B1EDC5174A985D003C06CD /* BackgroundStolen@2x.png in Resources */,
 				A8B1EDC6174A985D003C06CD /* StolenButton.png in Resources */,
 				A8B1EDC7174A985D003C06CD /* StolenButton@2x.png in Resources */,
+				E01EE45217690D4A00A40DBC /* ProfileViewController.xib in Resources */,
+				E01EE45417690F7500A40DBC /* default-user.png in Resources */,
+				E01EE45917690FE300A40DBC /* ProfileViewCell.xib in Resources */,
+				E01EE46117691A2C00A40DBC /* SettingsButtonHighlighted.png in Resources */,
+				E01EE46217691A2C00A40DBC /* SettingsButton.png in Resources */,
+				E01EE46317691A2C00A40DBC /* SettingsButtonHighlighted@2x.png in Resources */,
+				E01EE46417691A2C00A40DBC /* SettingsButton@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -844,6 +895,9 @@
 				A8962A04169CA36D00C33348 /* GameRulesViewController.m in Sources */,
 				A8B1EDB9174A95B7003C06CD /* NotifHasPrizeViewController.m in Sources */,
 				A8B1EDBE174A97F0003C06CD /* NotifLostPrizeViewController.m in Sources */,
+				E01EE45117690D4A00A40DBC /* ProfileViewController.m in Sources */,
+				E01EE45717690FCB00A40DBC /* ProfileViewCell.m in Sources */,
+				E01EE45C176911DA00A40DBC /* Prize.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -866,6 +920,10 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -890,6 +948,10 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
