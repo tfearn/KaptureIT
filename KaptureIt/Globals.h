@@ -27,6 +27,7 @@
 // Notifications
 #define kNotificationDoLogin        @"NotificationDoFacebookLogin"
 #define kNotificationLoginComplete  @"NotificationLoginComplete"
+#define kNotificationRefreshPrizes  @"NotificationRefreshPrizes"
 
 // Urls
 #define kUrlFacebookPicture         @"https://graph.facebook.com/%@/picture"

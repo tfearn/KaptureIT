@@ -22,6 +22,14 @@
 @synthesize acquirerange = _acquirerange;
 @synthesize maxplayers = _maxplayers;
 @synthesize shieldtime = _shieldtime;
+@synthesize winnerInfo = _winnerInfo;
+
+- (id)init {
+    if (self = [super init]) {
+		_winnerInfo = [[WinnerInfo alloc] init];
+    }
+    return self;
+}
 
 - (void)assignValuesFromObject:(PFObject *)object {
     self.objectId = [object objectId];
@@ -37,6 +45,10 @@
     self.acquirerange = [[object objectForKey:@"acquirerange"] intValue];
     self.maxplayers = [[object objectForKey:@"maxplayers"] intValue];
     self.shieldtime = [[object objectForKey:@"shieldtime"] intValue];
+    
+    PFObject *winnerInfoObject = [object objectForKey:@"winnerInfoObject"];
+    if(winnerInfoObject != nil)
+        [self.winnerInfo assignValuesFromObject:winnerInfoObject];
 }
 
 @end

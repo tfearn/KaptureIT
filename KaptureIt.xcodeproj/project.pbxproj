@@ -143,6 +143,14 @@
 		E01EE46217691A2C00A40DBC /* SettingsButton.png in Resources */ = {isa = PBXBuildFile; fileRef = E01EE45E17691A2B00A40DBC /* SettingsButton.png */; };
 		E01EE46317691A2C00A40DBC /* SettingsButtonHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E01EE45F17691A2B00A40DBC /* SettingsButtonHighlighted@2x.png */; };
 		E01EE46417691A2C00A40DBC /* SettingsButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E01EE46017691A2B00A40DBC /* SettingsButton@2x.png */; };
+		E068DC0C176A13690074B25F /* RedeemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E068DC0A176A13690074B25F /* RedeemViewController.m */; };
+		E068DC0D176A13690074B25F /* RedeemViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E068DC0B176A13690074B25F /* RedeemViewController.xib */; };
+		E068DC12176A22890074B25F /* RedeemButtonHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = E068DC0E176A22890074B25F /* RedeemButtonHighlighted.png */; };
+		E068DC13176A22890074B25F /* RedeemButton.png in Resources */ = {isa = PBXBuildFile; fileRef = E068DC0F176A22890074B25F /* RedeemButton.png */; };
+		E068DC14176A22890074B25F /* RedeemButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E068DC10176A22890074B25F /* RedeemButton@2x.png */; };
+		E068DC15176A22890074B25F /* RedeemButtonHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E068DC11176A22890074B25F /* RedeemButtonHighlighted@2x.png */; };
+		E068DC18176A4BD60074B25F /* WinnerInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = E068DC17176A4BD60074B25F /* WinnerInfo.m */; };
+		E068DC1C176A65900074B25F /* UIImage+Scaling.m in Sources */ = {isa = PBXBuildFile; fileRef = E068DC1B176A65900074B25F /* UIImage+Scaling.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -334,6 +342,17 @@
 		E01EE45E17691A2B00A40DBC /* SettingsButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SettingsButton.png; path = images/SettingsButton.png; sourceTree = "<group>"; };
 		E01EE45F17691A2B00A40DBC /* SettingsButtonHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SettingsButtonHighlighted@2x.png"; path = "images/SettingsButtonHighlighted@2x.png"; sourceTree = "<group>"; };
 		E01EE46017691A2B00A40DBC /* SettingsButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SettingsButton@2x.png"; path = "images/SettingsButton@2x.png"; sourceTree = "<group>"; };
+		E068DC09176A13690074B25F /* RedeemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RedeemViewController.h; sourceTree = "<group>"; };
+		E068DC0A176A13690074B25F /* RedeemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RedeemViewController.m; sourceTree = "<group>"; };
+		E068DC0B176A13690074B25F /* RedeemViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RedeemViewController.xib; sourceTree = "<group>"; };
+		E068DC0E176A22890074B25F /* RedeemButtonHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = RedeemButtonHighlighted.png; path = images/RedeemButtonHighlighted.png; sourceTree = "<group>"; };
+		E068DC0F176A22890074B25F /* RedeemButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = RedeemButton.png; path = images/RedeemButton.png; sourceTree = "<group>"; };
+		E068DC10176A22890074B25F /* RedeemButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "RedeemButton@2x.png"; path = "images/RedeemButton@2x.png"; sourceTree = "<group>"; };
+		E068DC11176A22890074B25F /* RedeemButtonHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "RedeemButtonHighlighted@2x.png"; path = "images/RedeemButtonHighlighted@2x.png"; sourceTree = "<group>"; };
+		E068DC16176A4BD60074B25F /* WinnerInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WinnerInfo.h; sourceTree = "<group>"; };
+		E068DC17176A4BD60074B25F /* WinnerInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WinnerInfo.m; sourceTree = "<group>"; };
+		E068DC1A176A65900074B25F /* UIImage+Scaling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scaling.h"; sourceTree = "<group>"; };
+		E068DC1B176A65900074B25F /* UIImage+Scaling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Scaling.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -442,6 +461,7 @@
 		A8F76D7715FA6E52008A5E3C /* KaptureIt */ = {
 			isa = PBXGroup;
 			children = (
+				E068DC19176A65780074B25F /* Categories */,
 				A8F76DB915FA7BF9008A5E3C /* External */,
 				A8FA873E15FB914000EC041A /* images */,
 				A8F76DA415FA703E008A5E3C /* Model */,
@@ -474,6 +494,8 @@
 				A8FA874A15FBB46600EC041A /* Location.m */,
 				A8FA874C15FBBB6B00EC041A /* Contest.h */,
 				A8FA874D15FBBB6B00EC041A /* Contest.m */,
+				E068DC16176A4BD60074B25F /* WinnerInfo.h */,
+				E068DC17176A4BD60074B25F /* WinnerInfo.m */,
 				E01EE45A176911DA00A40DBC /* Prize.h */,
 				E01EE45B176911DA00A40DBC /* Prize.m */,
 				A894F24015FCF7DA0083EC22 /* Player.h */,
@@ -638,6 +660,10 @@
 		A8FA873E15FB914000EC041A /* images */ = {
 			isa = PBXGroup;
 			children = (
+				E068DC0E176A22890074B25F /* RedeemButtonHighlighted.png */,
+				E068DC0F176A22890074B25F /* RedeemButton.png */,
+				E068DC10176A22890074B25F /* RedeemButton@2x.png */,
+				E068DC11176A22890074B25F /* RedeemButtonHighlighted@2x.png */,
 				E01EE45D17691A2B00A40DBC /* SettingsButtonHighlighted.png */,
 				E01EE45E17691A2B00A40DBC /* SettingsButton.png */,
 				E01EE45F17691A2B00A40DBC /* SettingsButtonHighlighted@2x.png */,
@@ -716,8 +742,20 @@
 				A8962A01169CA36D00C33348 /* GameRulesViewController.h */,
 				A8962A02169CA36D00C33348 /* GameRulesViewController.m */,
 				A8962A03169CA36D00C33348 /* GameRulesViewController.xib */,
+				E068DC09176A13690074B25F /* RedeemViewController.h */,
+				E068DC0A176A13690074B25F /* RedeemViewController.m */,
+				E068DC0B176A13690074B25F /* RedeemViewController.xib */,
 			);
 			name = Profile;
+			sourceTree = "<group>";
+		};
+		E068DC19176A65780074B25F /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				E068DC1A176A65900074B25F /* UIImage+Scaling.h */,
+				E068DC1B176A65900074B25F /* UIImage+Scaling.m */,
+			);
+			name = Categories;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -843,6 +881,11 @@
 				E01EE46217691A2C00A40DBC /* SettingsButton.png in Resources */,
 				E01EE46317691A2C00A40DBC /* SettingsButtonHighlighted@2x.png in Resources */,
 				E01EE46417691A2C00A40DBC /* SettingsButton@2x.png in Resources */,
+				E068DC0D176A13690074B25F /* RedeemViewController.xib in Resources */,
+				E068DC12176A22890074B25F /* RedeemButtonHighlighted.png in Resources */,
+				E068DC13176A22890074B25F /* RedeemButton.png in Resources */,
+				E068DC14176A22890074B25F /* RedeemButton@2x.png in Resources */,
+				E068DC15176A22890074B25F /* RedeemButtonHighlighted@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -898,6 +941,9 @@
 				E01EE45117690D4A00A40DBC /* ProfileViewController.m in Sources */,
 				E01EE45717690FCB00A40DBC /* ProfileViewCell.m in Sources */,
 				E01EE45C176911DA00A40DBC /* Prize.m in Sources */,
+				E068DC0C176A13690074B25F /* RedeemViewController.m in Sources */,
+				E068DC18176A4BD60074B25F /* WinnerInfo.m in Sources */,
+				E068DC1C176A65900074B25F /* UIImage+Scaling.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

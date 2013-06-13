@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <Parse/Parse.h>
+#import "WinnerInfo.h"
 
 @interface Contest : NSObject {
     NSString *_objectId;
@@ -23,6 +24,7 @@
     int _acquirerange;
     int _maxplayers;
     int _shieldtime;
+    WinnerInfo *_winnerInfo;
 }
 @property (nonatomic, retain) NSString *objectId;
 @property (nonatomic, retain) NSString *name;
@@ -37,6 +39,7 @@
 @property int acquirerange;
 @property int maxplayers;
 @property int shieldtime;
+@property (nonatomic, retain) WinnerInfo *winnerInfo;
 
 - (void)assignValuesFromObject:(PFObject *)object;
 

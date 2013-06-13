@@ -13,6 +13,13 @@
 @synthesize redeemed = _redeemed;
 @synthesize contest = _contest;
 
+- (id)init {
+    if (self = [super init]) {
+        _contest = [[Contest alloc] init];
+    }
+    return self;
+}
+
 - (void)assignValuesFromObject:(PFObject *)object {
     self.objectId = [object objectId];
     self.redeemed = [[object objectForKey:@"redeemed"] boolValue];

@@ -12,8 +12,9 @@
 #import "ProfileViewCell.h"
 #import "Prize.h"
 #import "GameRulesViewController.h"
+#import "RedeemViewController.h"
 
-@interface ProfileViewController : BaseViewController <UIActionSheetDelegate, MFMailComposeViewControllerDelegate> {
+@interface ProfileViewController : BaseViewController <MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate> {
     IBOutlet UIImageView *_imageView;
     IBOutlet UITableView *_tableView;
     NSMutableArray *_prizes;

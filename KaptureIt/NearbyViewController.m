@@ -61,6 +61,7 @@
     PFQuery *query = [PFQuery queryWithClassName:@"Contest"];
     [query orderByAscending:@"startdate"];
     [query whereKey:@"active" equalTo:[NSNumber numberWithInt:1]];
+    [query includeKey:@"winnerInfoObject"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self dismissWaitView];
         if(error != nil) {
