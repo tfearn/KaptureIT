@@ -55,6 +55,7 @@
     PFQuery *query = [PFQuery queryWithClassName:@"Player"];
     [query whereKey:@"userObject" equalTo:[PFObject objectWithoutDataWithClassName:@"_User" objectId:user.objectId]]; 
     [query whereKey:@"contestObject" equalTo:[PFObject objectWithoutDataWithClassName:@"Contest" objectId:self.contest.objectId]]; 
+    [query includeKey:@"contestObject.winnerInfoObject"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error != nil) {
             [self dismissWaitView];
@@ -287,6 +288,7 @@
     PFQuery *query = [PFQuery queryWithClassName:@"Player"];
     [query whereKey:@"contestObject" equalTo:[PFObject objectWithoutDataWithClassName:@"Contest" objectId:self.contest.objectId]]; 
     [query includeKey:@"contestObject"];
+    [query includeKey:@"contestObject.winnerInfoObject"];
     [query includeKey:@"userObject"];
     [query whereKey:@"active" equalTo:[NSNumber numberWithInt:1]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {

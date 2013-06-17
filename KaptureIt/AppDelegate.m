@@ -194,6 +194,7 @@
         [query whereKey:@"active" equalTo:[NSNumber numberWithInt:1]];
         [query includeKey:@"userObject"];
         [query includeKey:@"contestObject"];
+        [query includeKey:@"contestObject.winnerInfoObject"];
         NSError *error = nil;
         NSArray *objects = [query findObjects:&error];
         if(error == nil && [objects count] > 0) {
