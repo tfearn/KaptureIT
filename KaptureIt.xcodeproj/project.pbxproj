@@ -151,6 +151,8 @@
 		E068DC15176A22890074B25F /* RedeemButtonHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E068DC11176A22890074B25F /* RedeemButtonHighlighted@2x.png */; };
 		E068DC18176A4BD60074B25F /* WinnerInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = E068DC17176A4BD60074B25F /* WinnerInfo.m */; };
 		E068DC1C176A65900074B25F /* UIImage+Scaling.m in Sources */ = {isa = PBXBuildFile; fileRef = E068DC1B176A65900074B25F /* UIImage+Scaling.m */; };
+		E0E377711770AA9500040170 /* ContestCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = E0E377701770AA9500040170 /* ContestCalloutView.m */; };
+		E0E377731770AAAE00040170 /* ContestCalloutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0E377721770AAAE00040170 /* ContestCalloutView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -353,6 +355,9 @@
 		E068DC17176A4BD60074B25F /* WinnerInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WinnerInfo.m; sourceTree = "<group>"; };
 		E068DC1A176A65900074B25F /* UIImage+Scaling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scaling.h"; sourceTree = "<group>"; };
 		E068DC1B176A65900074B25F /* UIImage+Scaling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Scaling.m"; sourceTree = "<group>"; };
+		E0E3776F1770AA9500040170 /* ContestCalloutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContestCalloutView.h; sourceTree = "<group>"; };
+		E0E377701770AA9500040170 /* ContestCalloutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContestCalloutView.m; sourceTree = "<group>"; };
+		E0E377721770AAAE00040170 /* ContestCalloutView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContestCalloutView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -396,6 +401,9 @@
 				A894F23B15FBFE6C0083EC22 /* ContestViewController.h */,
 				A894F23C15FBFE6C0083EC22 /* ContestViewController.m */,
 				A894F23D15FBFE6C0083EC22 /* ContestViewController.xib */,
+				E0E3776F1770AA9500040170 /* ContestCalloutView.h */,
+				E0E377701770AA9500040170 /* ContestCalloutView.m */,
+				E0E377721770AAAE00040170 /* ContestCalloutView.xib */,
 				A8B1EDB6174A95B7003C06CD /* NotifHasPrizeViewController.h */,
 				A8B1EDB7174A95B7003C06CD /* NotifHasPrizeViewController.m */,
 				A8B1EDB8174A95B7003C06CD /* NotifHasPrizeViewController.xib */,
@@ -886,6 +894,7 @@
 				E068DC13176A22890074B25F /* RedeemButton.png in Resources */,
 				E068DC14176A22890074B25F /* RedeemButton@2x.png in Resources */,
 				E068DC15176A22890074B25F /* RedeemButtonHighlighted@2x.png in Resources */,
+				E0E377731770AAAE00040170 /* ContestCalloutView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -944,6 +953,7 @@
 				E068DC0C176A13690074B25F /* RedeemViewController.m in Sources */,
 				E068DC18176A4BD60074B25F /* WinnerInfo.m in Sources */,
 				E068DC1C176A65900074B25F /* UIImage+Scaling.m in Sources */,
+				E0E377711770AA9500040170 /* ContestCalloutView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1033,8 +1043,8 @@
 					"-fobjc-arc",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "20FC4B82-3482-4234-AA2B-4B82B84440FC";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "20FC4B82-3482-4234-AA2B-4B82B84440FC";
+				PROVISIONING_PROFILE = "D3908ABF-76B1-43AA-8730-90CC630F4E45";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D3908ABF-76B1-43AA-8730-90CC630F4E45";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1060,8 +1070,8 @@
 					"-fobjc-arc",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "20FC4B82-3482-4234-AA2B-4B82B84440FC";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "20FC4B82-3482-4234-AA2B-4B82B84440FC";
+				PROVISIONING_PROFILE = "D3908ABF-76B1-43AA-8730-90CC630F4E45";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D3908ABF-76B1-43AA-8730-90CC630F4E45";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

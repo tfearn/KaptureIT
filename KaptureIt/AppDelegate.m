@@ -13,12 +13,6 @@
 #import "ContestViewController.h"
 #import "Player.h"
 
-@interface AppDelegate (Private)
-- (void)doLogin;
-- (void)loginComplete;
-@end
-
-
 @implementation AppDelegate
 @synthesize window = _window;
 @synthesize navigationController = _navigationController;
@@ -62,6 +56,7 @@
     [self.locationManager setDistanceFilter:kCLDistanceFilterNone];
     
     // Observers
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(doLogin) name:kNotificationDoLogin object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginComplete) name:kNotificationLoginComplete object:nil];
     
     // Perform login check process

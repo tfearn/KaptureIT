@@ -1,52 +1,4 @@
-require ('globals.inc.php');
-
 <?php
-	function serverGet($url) {
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-	    curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersGet);
-	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	    $response = curl_exec($ch);       
-	    curl_close($ch);
-		return json_decode($response);
-	}
-
-	function serverPost($url, $data) {
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-		$response = curl_exec($ch);       
-	    curl_close($ch);
-		return json_decode($response);
-	}
-
-	function serverPut($url, $data) {
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-		$response = curl_exec($ch);       
-	    curl_close($ch);
-		return json_decode($response);
-	}
-
-	function serverDelete($url, $data) {
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-		$response = curl_exec($ch);       
-	    curl_close($ch);
-		return json_decode($response);
-	}
-
 	function distance($lat1, $lon1, $lat2, $lon2, $unit) 
 	{ 
    		$theta = $lon1 - $lon2; 
@@ -68,24 +20,25 @@ require ('globals.inc.php');
 		return $arr[0];
 	}
 
+
+    require ('globals.inc.php');
+    
     // Lookup the active Contest
 	$ch = curl_init();
 	$where = "where={\"active\":1}"; 
-	$temp = serverGet("https://api.parse.com/1/classes/Contest?" . urlencode($where));
+	curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Contest?" . urlencode($where));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersGet);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $response = curl_exec($ch);       
+    curl_close($ch);
+	$temp = json_decode($response);
 	$contest = $temp->results[0];
 	
 	echo "Monitoring " . $contest->name . "...\n";
 	
+	// Loop forever
 	while(1) {
 	
-		// Has the contest ended?
-		//
-		$contestTimeLeft = strtotime($contest->endtime->iso) - time();
-		if($contestTimeLeft <= 0.0) {
-			break;
-		}
-
-
 		// Get all players
 		//
 	    $data = array(
@@ -96,20 +49,67 @@ require ('globals.inc.php');
 	    		),
 	    	'active' => 1,
 	    	);
-	    $players = serverGet("https://api.parse.com/1/classes/Player?include=userObject&where=" . json_encode($data));
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player?include=userObject&where=" . json_encode($data));
+    	curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersGet);
+    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    	$response = curl_exec($ch);       
+    	curl_close($ch);
+		$players = json_decode($response);
 		
 		
-		// Remove all bots that don't have the prize (they also cannot be an endlocation)
+		// Remove all bots that don't have the prize
 		//
 		foreach($players->results as $player) {			
-			if($player->bot == 1 && $player->hasprize == 0 && $player->endlocation != 1) {
+			if($player->bot == 1 && $player->hasprize == 0) {
 				$data = array();
-				$deleteresponse = serverDelete("https://api.parse.com/1/classes/Player/" . $player->objectId, $data);
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player/" . $player->objectId);
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+				curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 				$deleteresponse = curl_exec($ch);       
+				curl_close($ch);
 			}
 		}
 		
+	
 		
+		// Has the contest ended?
+		//
+		$contestTimeLeft = strtotime($contest->endtime->iso) - time();
+		if($contestTimeLeft <= 0.0) {
+
+			foreach($players->results as $player) {
+			
+				// Does a human player have the prize?
+				$humanWinner = 0;
+				if($player->hasprize == 1 && ! is_null($player->userObject)) {
+					$humanWinner = 1;
+					
+					// Send a notification to all contest players about the winner
+					$channel = "contest_" . $contest->objectId;
+					$message = getFirstName($player->userObject->displayname) . "has won the " . $contest->name;
+					$data = array('channels' => array($channel), 'data' => array('alert' => $message));
+					$ch = curl_init();
+					curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/push");
+					curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+					curl_setopt($ch, CURLOPT_POST, 1);
+					curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+					$notifresponse = curl_exec($ch);
+					curl_close($ch);
+				}
+			}
+
+			if($humanWinner == 1) {			
+				// The contest is over, break out
+				break;
+			}
+		}
+
+
 		// Get the player with the prize
 	    $data = array(
 	    	'contestObject' => array(
@@ -119,7 +119,13 @@ require ('globals.inc.php');
 	    		),
 	    	'hasprize' => 1
 	    	);
-	    $playersFind = serverGet("https://api.parse.com/1/classes/Player?include=userObject&where=" . json_encode($data));
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player?include=userObject&where=" . json_encode($data));
+    	curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersGet);
+    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    	$response = curl_exec($ch);       
+    	curl_close($ch);
+		$playersFind = json_decode($response);
 		$playerWithPrize = $playersFind->results[0];
 		
 
@@ -131,7 +137,14 @@ require ('globals.inc.php');
 			$data = array(
     			'hasprize' => 0,
 			    );
-			$updateresponse = serverPut("https://api.parse.com/1/classes/Player/" . $playerWithPrize->objectId, $data);
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player/" . $playerWithPrize->objectId);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+			$updateresponse = curl_exec($ch);       
+			curl_close($ch);
 			
 			// Create a bot with the prize.  
 			$acquiredDate = gmdate('Y-m-d\TH:i:s.000\Z', time() - (24*60*60));
@@ -154,35 +167,14 @@ require ('globals.inc.php');
 			    	'latitude' => $playerWithPrize->location->latitude
 			    	),
 			    );
-			$insertresponse = serverPost("https://api.parse.com/1/classes/Player", $data);
-		}
-		
-		
-		// How far is the player with the prize away from the endlocation?
-		//
-		if($playerWithPrize->active == 1 && $playerWithPrize->bot != 1) {
-		
-			$miles = distance(
-				$playerWithPrize->location->latitude,
-				$playerWithPrize->location->longitude,
-				$player->location->latitude,
-				$player->location->longitude,
-				"m"
-				);
-			$feet = $miles * 5280;
-			echo $playerWithPrize->userObject->displayname . " is carrying the prize and is " . $feet . " feet away from the end location\n";
-
-			// Are they within range			
-			if($feet <= $contest->acquirerange) {
-				
-				// Give the player a prize
-				
-				// Send a notification to the player
-				
-				// Create a bot with the prize at a new location
-
-				continue;				
-			}
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player");
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+			$insertresponse = curl_exec($ch);       
+			curl_close($ch);
 		}
 		
 
@@ -201,7 +193,14 @@ require ('globals.inc.php');
 				$data = array(
     				'shielded' => 0
 				    );
-				$updateresponse = serverPut("https://api.parse.com/1/classes/Player/" . $playerWithPrize->objectId, $data);
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player/" . $playerWithPrize->objectId);
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+				curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+				$updateresponse = curl_exec($ch);       
+				curl_close($ch);
 				
 				// Sleep for 5 seconds and fall through
 				sleep(5);
@@ -260,7 +259,14 @@ require ('globals.inc.php');
 			$data = array(
     			'hasprize' => 0,
 			    );
-			$updateresponse = serverPut("https://api.parse.com/1/classes/Player/" . $playerWithPrize->objectId, $data);
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player/" . $playerWithPrize->objectId);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+			$updateresponse = curl_exec($ch);       
+			curl_close($ch);
 			    
 			// This player acquires the prize
 			$isoDate = gmdate('Y-m-d\TH:i:s.000\Z');
@@ -272,7 +278,14 @@ require ('globals.inc.php');
 			    	'iso' => $isoDate
 			    	),
 			    );
-			$updateresponse = serverPut("https://api.parse.com/1/classes/Player/" . $playerToAcquire->objectId, $data);
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/classes/Player/" . $playerToAcquire->objectId);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+			$updateresponse = curl_exec($ch);       
+			curl_close($ch);
 				
 			// Send a Notification to the Winner
 			$channel = "server_" . $playerToAcquire->userObject->objectId;
@@ -285,7 +298,14 @@ require ('globals.inc.php');
 				$message = "You have just acquired the prize from " . getFirstName($playerWithPrize->userObject->displayname) . ". You have a limited amount of time to get away";
 			}
 			$data = array('channels' => array($channel), 'data' => array('alert' => $message));
-			$notifresponse = serverPost("https://api.parse.com/1/push", $data);
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/push");
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+			$notifresponse = curl_exec($ch);
+			curl_close($ch);
 
 			// Send a Notification to the Loser
 			$losername = "Bot";
@@ -294,7 +314,14 @@ require ('globals.inc.php');
 				$losername = $playerWithPrize->userObject->displayname;
 				$message = "You have just lost the prize to " . getFirstName($playerToAcquire->userObject->displayname);
 				$data = array('channels' => array($channel), 'data' => array('alert' => $message));
-				$notifresponse = serverPost("https://api.parse.com/1/push", $data);
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, "https://api.parse.com/1/push");
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $parseHeadersPut);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			    curl_setopt($ch, CURLOPT_POST, 1);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+				$notifresponse = curl_exec($ch);       
+				curl_close($ch);
 			}
 
 			echo $winnername . " has taken the prize from " . $losername . "\n";

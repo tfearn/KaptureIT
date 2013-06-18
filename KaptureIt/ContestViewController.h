@@ -12,6 +12,7 @@
 #import "BaseViewController.h"
 #import "Contest.h"
 #import "PlayerAnnotation.h"
+#import "ContestCalloutView.h"
 #import "ContestDetailViewController.h"
 #import "Player.h"
 #import "TimePassedFormatter.h"
@@ -27,11 +28,11 @@
     CLLocation *_initialLocation;
     Contest *_contest;
     NSMutableArray *_players;
-    Player *_winner;
     NSTimer *_refreshTimer;
     NSTimer *_countdownTimer;
     
     BOOL hasPrize;
+    BOOL retrievingData;
 }
 @property (nonatomic, strong) UIToolbar *toolbar;
 @property (nonatomic, retain) UILabel *timeleft;
@@ -41,7 +42,6 @@
 @property (nonatomic, retain) CLLocation *initialLocation;
 @property (nonatomic, retain) Contest *contest;
 @property (nonatomic, retain) NSMutableArray *players;
-@property (nonatomic, retain) Player *winner;
 @property (nonatomic, retain) NSTimer *refreshTimer;
 @property (nonatomic, retain) NSTimer *countdownTimer;
 

@@ -68,32 +68,60 @@
 }
 
 - (IBAction)joinContestButtonPressed:(id)sender {
-
-#if 0
-    if([PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) {
-        // Post to Facebook
-        NSString *message = [NSString stringWithFormat:@"Just joined the '%@' contest via Kapture | IT.", self.contest.name];
-        PF_FBRequest *request = [PF_FBRequest requestForPostStatusUpdate:message];
-        [request startWithCompletionHandler:^(PF_FBRequestConnection *connection, id result, NSError *error) {
-        }];
-    }
-    if([PFTwitterUtils isLinkedWithUser:[PFUser currentUser]]) {
-        // Tweet
-        NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1/statuses/update.json"];
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-        [request setHTTPMethod:@"POST"];
-        [request setHTTPBody:[[NSString stringWithFormat:@"status=Just joined the '%@' contest via @wecaptureit!", self.contest.name]
-                              dataUsingEncoding:NSASCIIStringEncoding]];
-        [[PFTwitterUtils twitter] signRequest:request];
-        NSURLResponse *response = nil;
-        NSError *myError = nil;
-        [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&myError];
-    }
-#endif
     
-	ContestViewController *controller = [[ContestViewController alloc] init];
-	controller.contest = self.contest;
-	[self.navigationController pushViewController:controller animated:YES];
+    // Are we already a winner in this contest?  Check the Prizes
+    [self showSpinnerView];
+    PFQuery *query = [PFQuery queryWithClassName:@"Prize"];
+    [query orderByAscending:@"startdate"];
+    [query whereKey:@"userObject" equalTo:[PFObject objectWithoutDataWithClassName:@"_User" objectId:[PFUser currentUser].objectId]];
+    [query whereKey:@"contestObject" equalTo:[PFObject objectWithoutDataWithClassName:@"Contest" objectId:self.contest.objectId]];
+    [query includeKey:@"contestObject"];
+    [query includeKey:@"contestObject.winnerInfoObject"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        [self dismissSpinnerView];
+        if(error != nil) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Database Error" message:[error description] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            [alert show];
+            return;
+        }
+        
+        if([objects count]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Join" message:@"You are already a winner in this contest and cannot join again" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            [alert show];
+            return;
+        }
+        else {
+#if 0
+            // Post to Facebook?
+            if([PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) {
+                // Post to Facebook
+                NSString *message = [NSString stringWithFormat:@"Just joined the '%@' contest via Kapture | IT.", self.contest.name];
+                PF_FBRequest *request = [PF_FBRequest requestForPostStatusUpdate:message];
+                [request startWithCompletionHandler:^(PF_FBRequestConnection *connection, id result, NSError *error) {
+                }];
+            }
+            
+            // Post to Twitter
+            if([PFTwitterUtils isLinkedWithUser:[PFUser currentUser]]) {
+                // Tweet
+                NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1/statuses/update.json"];
+                NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+                [request setHTTPMethod:@"POST"];
+                [request setHTTPBody:[[NSString stringWithFormat:@"status=Just joined the '%@' contest via @wecaptureit!", self.contest.name]
+                                      dataUsingEncoding:NSASCIIStringEncoding]];
+                [[PFTwitterUtils twitter] signRequest:request];
+                NSURLResponse *response = nil;
+                NSError *myError = nil;
+                [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&myError];
+            }
+#endif
+            
+            // Join the contest
+            ContestViewController *controller = [[ContestViewController alloc] init];
+            controller.contest = self.contest;
+            [self.navigationController pushViewController:controller animated:YES];
+        }
+    }];
 }
 
 @end

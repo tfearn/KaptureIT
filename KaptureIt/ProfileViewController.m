@@ -73,6 +73,13 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+- (IBAction)settingsButtonPressed:(id)sender {
+    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Game Rules", @"Kapture it Support", @"Logout", nil];
+    popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+    popupQuery.tag = kActionSheetSettings;
+    [popupQuery showInView:self.view];
+}
+
 - (IBAction)pictureButtonPressed:(id)sender {
     // Do we have a camera?
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera] == YES) {
@@ -125,13 +132,6 @@
     
     [controller presentModalViewController: cameraUI animated: YES];
     return YES;
-}
-
-- (IBAction)settingsButtonPressed:(id)sender {
-    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Game Rules", @"Kapture it Support", nil];
-    popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-    popupQuery.tag = kActionSheetSettings;
-    [popupQuery showInView:self.view];
 }
 
 - (void)getData {
@@ -216,10 +216,23 @@
                 break;
             }
                 
+            case 2:
+            {
+                // Logout
+                [PFUser logOut];
+                [self.navigationController popToRootViewControllerAnimated:YES];
+                [self performSelector:@selector(doLogin) withObject:nil afterDelay:0.5];
+                break;
+            }
+                
             default:
                 break;
         }
     }
+}
+
+- (void)doLogin {
+    [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationDoLogin object:self userInfo:nil];
 }
 
 #pragma mark -
